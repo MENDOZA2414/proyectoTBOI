@@ -11,6 +11,7 @@ public class Objeto {
 
     public Objeto(String spritePath, int tamaño, int x, int y) {
     	this.tamaño = tamaño;
+    	
         try {
             this.sprite = ImageIO.read(new File(spritePath));
         } catch (IOException e) {

@@ -22,6 +22,7 @@ public class Ventana extends JFrame{
 	
 	private Inicio inicio = new Inicio(ruta);
 	private Menu menu = new Menu(ruta);
+	private Juego juego = new Juego();
 	
 	public Ventana() {
 		//Propiedades de la ventana
@@ -74,7 +75,7 @@ public class Ventana extends JFrame{
 
 	public void keysMenu(){
 		menu.addKeyListener(new KeyListener() {
-			int opcion;
+			int opcion = 1;
 
 			@Override
 			public void keyPressed(KeyEvent  e) {
@@ -92,11 +93,14 @@ public class Ventana extends JFrame{
 					opcion = 2;
 					actualizar();
 				}
-				if (keyCode == 10) { // Realizar algo cuando se presiona la tecla enter
+				if (keyCode == 10 || keyCode == 32) { // Realizar algo cuando se presiona la tecla enter
 					if(opcion == 1) {
 						remove(menu);
-						Isaac nuevo = new Isaac();
-						actualizar();
+						
+						add(juego);
+						juego.requestFocusInWindow(); // Establece el foco en el panel de juego
+						keysJuego();
+		                actualizar();
 					}
 					if(opcion == 2) {
 						System.exit(0);
@@ -124,6 +128,78 @@ public class Ventana extends JFrame{
 		menu.setFocusable(true);
         menu.requestFocusInWindow();
 	}
+	
+	public void keysJuego() {
+		juego.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void keyPressed(KeyEvent e) {
+			    int keyCode = e.getKeyCode();
+
+			    switch (keyCode) {
+			        case KeyEvent.VK_A:
+			            juego.setVelocityX(-juego.getCharacterSpeed());
+			            break;
+			        case KeyEvent.VK_D:
+			        	juego.setVelocityX(juego.getCharacterSpeed());
+			            break;
+			        case KeyEvent.VK_W:
+			        	juego.setVelocityY(-juego.getCharacterSpeed());
+			            break;
+			        case KeyEvent.VK_S:
+			        	juego.setVelocityY(juego.getCharacterSpeed());
+			            break;
+			        case KeyEvent.VK_UP:
+			            juego.shootUp();
+			            break;
+			        case KeyEvent.VK_DOWN:
+			            juego.shootDown();
+			            break;
+			        case KeyEvent.VK_LEFT:
+			            juego.shootLeft();
+			            break;
+			        case KeyEvent.VK_RIGHT:
+			            juego.shootRight();
+			            break;
+			        case KeyEvent.VK_M:
+			            /*if (clip.isRunning()) {   //Musica que puso Chris
+			                System.out.println("Muted...");
+			                clip.stop();
+			            } else {
+			                System.out.println("Playing...");
+			                clip.start();
+			            }*/
+			            break;
+			        case KeyEvent.VK_ESCAPE:
+			            System.out.println("Exit...");
+			            System.exit(0);
+			            break;
+			    }
+			}
+
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_D) {
+					juego.setVelocityX(0);
+		        } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
+		        	juego.setVelocityY(0);
+		        }	
+			}
+			
+		});
+		
+		juego.setFocusable(true);
+        juego.requestFocusInWindow();
+	}
+	
+	
+	
 	//Metodo para la pantalla de carga
 	public void pantallaCarga() {
 		Carga carga = new Carga(ruta);

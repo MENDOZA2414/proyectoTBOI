@@ -19,12 +19,12 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.sound.sampled.FloatControl;
 
-public class Isaac extends JPanel implements KeyListener {
+public class Juego extends JPanel {
 
     private static final int WIDTH = 800;
     private static final int HEIGHT = 500;
     private static final int CHARACTER_SIZE = 62;
-    private static final int CHARACTER_SPEED = 3;
+    private static final int CHARACTER_SPEED = 6;
     private static final int BALL_SIZE = 30;
     private static final int BALL_SPEED = 8;
     private static final int FPS = 60;
@@ -46,8 +46,9 @@ public class Isaac extends JPanel implements KeyListener {
     private Clip clip;
 
     private float volume;
-
-    public Isaac() {
+    private Objeto objeto = new Objeto("resources/popo.png",40,100,100);
+    
+    public Juego() {
         iniciarMusica();
         
         characterX = WIDTH / 2;
@@ -64,21 +65,7 @@ public class Isaac extends JPanel implements KeyListener {
             fondo = ImageIO.read(new File("resources/instrucciones2.png"));
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        JFrame frame = new JFrame("The Binding of Isaac");
-        frame.setSize(WIDTH, HEIGHT);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(this);
-        frame.addKeyListener(this);
-        frame.setFocusable(true);
-        frame.setFocusTraversalKeysEnabled(false);
-        frame.setResizable(false);
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
-
-        
-        
+        }   
 
         Timer timer = new Timer(1000 / FPS, e -> {
             update();
@@ -95,11 +82,15 @@ public class Isaac extends JPanel implements KeyListener {
 
         //fondo agregado
         g.drawImage(fondo, 0, 0, WIDTH-16, HEIGHT-39, null);
-
+        
+        g.drawImage(objeto.getSprite(),objeto.getX(),objeto.getY(),40,40,null);
+        
         // Dibuja el personaje de Isaac
         g.drawImage(isaac, characterX - CHARACTER_SIZE / 2, characterY - CHARACTER_SIZE / 2, CHARACTER_SIZE,CHARACTER_SIZE, null);
 
-        
+    	
+    	
+    	
         // Dibuja las pelotas
         for (Ball ball : balls) {
             g.drawImage(tear, ball.x - BALL_SIZE / 2, ball.y - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE, null);
@@ -152,55 +143,7 @@ public class Isaac extends JPanel implements KeyListener {
         balls.removeIf(ball -> ball.x < 85 || ball.x > WIDTH-110 || ball.y < 85 || ball.y > HEIGHT-110);
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_A) {
-            velocityX = -CHARACTER_SPEED;
-        } else if (e.getKeyCode() == KeyEvent.VK_D) {
-            velocityX = CHARACTER_SPEED;
-        } else if (e.getKeyCode() == KeyEvent.VK_W) {
-            velocityY = -CHARACTER_SPEED;
-        } else if (e.getKeyCode() == KeyEvent.VK_S) {
-            velocityY = CHARACTER_SPEED;
-        } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-            shootUp();
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            shootDown();
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            shootLeft();
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            shootRight();
-        } else if(e.getKeyCode() == KeyEvent.VK_M){
-
-            if (clip.isRunning()) {
-                System.out.println("Muted...");
-                clip.stop();
-            } else{
-                System.out.println("Playing...");
-                clip.start();
-            }
-        
-        } else if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-            System.out.println("Exit...");
-            System.exit(0);
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_D) {
-            velocityX = 0;
-        } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
-            velocityY = 0;
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // No se utiliza en este ejemplo
-    }
-
-    private void shootUp() {
+    public void shootUp() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastShootTime >= SHOOT_DELAY) {
             Ball ball = new Ball(characterX, characterY, 0, -BALL_SPEED);
@@ -209,7 +152,7 @@ public class Isaac extends JPanel implements KeyListener {
         }
     }
 
-    private void shootDown() {
+    public void shootDown() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastShootTime >= SHOOT_DELAY) {
             Ball ball = new Ball(characterX, characterY, 0, BALL_SPEED);
@@ -218,7 +161,7 @@ public class Isaac extends JPanel implements KeyListener {
         }
     }
 
-    private void shootLeft() {
+    public void shootLeft() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastShootTime >= SHOOT_DELAY) {
             Ball ball = new Ball(characterX, characterY, -BALL_SPEED, 0);
@@ -227,7 +170,7 @@ public class Isaac extends JPanel implements KeyListener {
         }
     }
 
-    private void shootRight() {
+    public void shootRight() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastShootTime >= SHOOT_DELAY) {
             Ball ball = new Ball(characterX, characterY, BALL_SPEED, 0);
@@ -236,9 +179,6 @@ public class Isaac extends JPanel implements KeyListener {
         }
     }
 
-    public static void main(String[] args) {
-        Isaac nuevo = new Isaac();
-    }
 
     private class Ball {
         private int x;
@@ -259,7 +199,7 @@ public class Isaac extends JPanel implements KeyListener {
             // Crear objeto Clip para reproducir el audio
             clip = AudioSystem.getClip();
 
-            clip.open(AudioSystem.getAudioInputStream(new File("music\\MainSong.wav").getAbsoluteFile()));
+            clip.open(AudioSystem.getAudioInputStream(new File("music/MainSong.wav").getAbsoluteFile()));
 
             //ajustar volumen audio
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -282,4 +222,23 @@ public class Isaac extends JPanel implements KeyListener {
         }
     }
 
+	public int getVelocityX() {
+		return velocityX;
+	}
+
+	public void setVelocityX(int velocityX) {
+		this.velocityX = velocityX;
+	}
+
+	public int getVelocityY() {
+		return velocityY;
+	}
+
+	public void setVelocityY(int velocityY) {
+		this.velocityY = velocityY;
+	}
+
+	public static int getCharacterSpeed() {
+		return CHARACTER_SPEED;
+	}
 }
