@@ -21,8 +21,15 @@ public class Objeto {
         this.y = y;
     }
     
-    public void colisionObjeto(int x, int y) {
-    	
+    public boolean colisionObjeto(int jugadorX, int jugadorY, int tamañoJugador) {
+        int jugadorAncho = tamañoJugador;
+        int jugadorAlto = tamañoJugador;
+    
+        if (jugadorX + jugadorAncho >= x && jugadorX <= x + tamaño && jugadorY + jugadorAlto >= y && jugadorY <= y + tamaño) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public int getX() {
