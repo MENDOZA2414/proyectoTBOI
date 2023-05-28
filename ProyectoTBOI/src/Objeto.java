@@ -20,6 +20,10 @@ public class Objeto {
         this.x = x;
         this.y = y;
     }
+    
+    public void colisionObjeto(int x, int y) {
+    	
+    }
 
     public int getX() {
         return x;
@@ -32,4 +36,9 @@ public class Objeto {
     public BufferedImage getSprite() {
 		return sprite;
 	}
+
+	public int getTamaño() {
+		return tamaño;
+	}
+ 
 }

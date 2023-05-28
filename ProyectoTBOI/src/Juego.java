@@ -46,7 +46,7 @@ public class Juego extends JPanel {
     private Clip clip;
 
     private float volume;
-    private Objeto objeto = new Objeto("resources/popo.png",40,100,100);
+    private Objeto caca = new Objeto("resources/popo.png",100,100,100);
     
     public Juego() {
         iniciarMusica();
@@ -80,10 +80,12 @@ public class Juego extends JPanel {
         super.paint(g);
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
+       
+        
         //fondo agregado
         g.drawImage(fondo, 0, 0, WIDTH-16, HEIGHT-39, null);
         
-        g.drawImage(objeto.getSprite(),objeto.getX(),objeto.getY(),40,40,null);
+        g.drawImage(caca.getSprite(),caca.getX(),caca.getY(),caca.getTamaño(),caca.getTamaño(),null);
         
         // Dibuja el personaje de Isaac
         g.drawImage(isaac, characterX - CHARACTER_SIZE / 2, characterY - CHARACTER_SIZE / 2, CHARACTER_SIZE,CHARACTER_SIZE, null);
