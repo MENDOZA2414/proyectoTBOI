@@ -4,6 +4,8 @@
 //ALMA DELIA VARGAS GONZALEZ
 //CHRISTIAN RODRIGUEZ MORENO
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
@@ -19,20 +21,100 @@ public class Ventana extends JFrame{
 	private String ruta = "resources/"; 
 	
 	private Inicio inicio = new Inicio(ruta);
+	private Menu menu = new Menu(ruta);
 	
 	public Ventana() {
 		//Propiedades de la ventana
 		super("The binding of Isaac");
 		setSize(largo, ancho);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    add(inicio);
+	    
+		keysInicio();
+		add(inicio);
+
 	    setLocationRelativeTo(null);
 	    setVisible(true);
 	    setResizable(false);
 	    
 		//pantallaCarga();
 	}
-	
+	public void keysInicio(){
+		inicio.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent  e) {
+				// TODO Auto-generated method stub
+				char keyCode = e.getKeyChar();
+				if (keyCode == KeyEvent.VK_SPACE) {
+                    inicio.setFocusable(false);
+                    remove(inicio);
+                    add(menu);
+                    menu.requestFocusInWindow(); // Establece el foco en el panel de menú
+                    keysMenu();
+                    actualizar();
+                }
+			}
+
+			@Override
+			public void keyReleased(KeyEvent  e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent  e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		inicio.setFocusable(true);
+        inicio.requestFocusInWindow();
+	}
+
+	public void keysMenu(){
+		menu.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent  e) {
+				System.out.println("iiiiiiii");
+				// TODO Auto-generated method stub
+				char keyCode = e.getKeyChar();
+				System.out.println(keyCode);
+				if(keyCode == 'w' || keyCode == 'W'){
+					menu.setMenu1();
+					actualizar();
+				}
+				if(keyCode == 's' || keyCode == 'S'){
+					menu.setMenu2();
+					actualizar();
+				}
+				if (keyCode == KeyEvent.VK_ENTER) { // Realizar algo cuando se presiona la tecla enter
+					//remove(inicio);
+					//add(menu);
+
+					//actualizar();
+					
+        		}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent  e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent  e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		menu.setFocusable(true);
+        menu.requestFocusInWindow();
+	}
 	//Metodo para la pantalla de carga
 	public void pantallaCarga() {
 		Carga carga = new Carga(ruta);
