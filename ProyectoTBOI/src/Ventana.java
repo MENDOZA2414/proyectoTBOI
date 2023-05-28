@@ -43,7 +43,7 @@ public class Ventana extends JFrame{
 
 			@Override
 			public void keyPressed(KeyEvent  e) {
-				// TODO Auto-generated method stub
+				
 				char keyCode = e.getKeyChar();
 				if (keyCode == KeyEvent.VK_SPACE) {
                     inicio.setFocusable(false);
@@ -74,27 +74,34 @@ public class Ventana extends JFrame{
 
 	public void keysMenu(){
 		menu.addKeyListener(new KeyListener() {
+			int opcion;
 
 			@Override
 			public void keyPressed(KeyEvent  e) {
-				System.out.println("iiiiiiii");
-				// TODO Auto-generated method stub
-				char keyCode = e.getKeyChar();
+			
+				int keyCode = e.getKeyCode(); 
+				
 				System.out.println(keyCode);
-				if(keyCode == 'w' || keyCode == 'W'){
+				if(keyCode == KeyEvent.VK_W){
 					menu.setMenu1();
+					opcion = 1;
 					actualizar();
 				}
-				if(keyCode == 's' || keyCode == 'S'){
+				if(keyCode == KeyEvent.VK_S){
 					menu.setMenu2();
+					opcion = 2;
 					actualizar();
 				}
-				if (keyCode == KeyEvent.VK_ENTER) { // Realizar algo cuando se presiona la tecla enter
+				if (keyCode == 32) { // Realizar algo cuando se presiona la tecla enter
+					if(opcion == 1) {
+						//mapa instrucciones
+					}
+					if(opcion == 2) {
+						System.exit(0);
+					}
 					//remove(inicio);
 					//add(menu);
-
 					//actualizar();
-					
         		}
 			}
 
