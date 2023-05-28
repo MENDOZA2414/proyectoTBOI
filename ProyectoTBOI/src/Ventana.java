@@ -82,19 +82,21 @@ public class Ventana extends JFrame{
 				int keyCode = e.getKeyCode(); 
 				
 				System.out.println(keyCode);
-				if(keyCode == KeyEvent.VK_W){
+				if(keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP){
 					menu.setMenu1();
 					opcion = 1;
 					actualizar();
 				}
-				if(keyCode == KeyEvent.VK_S){
+				if(keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN){
 					menu.setMenu2();
 					opcion = 2;
 					actualizar();
 				}
-				if (keyCode == 32) { // Realizar algo cuando se presiona la tecla enter
+				if (keyCode == 10) { // Realizar algo cuando se presiona la tecla enter
 					if(opcion == 1) {
-						//mapa instrucciones
+						remove(menu);
+						Isaac nuevo = new Isaac();
+						actualizar();
 					}
 					if(opcion == 2) {
 						System.exit(0);
