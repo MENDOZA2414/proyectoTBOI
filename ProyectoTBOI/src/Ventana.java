@@ -18,15 +18,18 @@ public class Ventana extends JFrame{
 	//Ruta de recursos 
 	private String ruta = "resources/"; 
 	
+	private Inicio inicio = new Inicio(ruta);
 	
 	public Ventana() {
 		//Propiedades de la ventana
 		super("The binding of Isaac");
 		setSize(largo, ancho);
-		setVisible(true);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    add(inicio);
 	    setLocationRelativeTo(null);
+	    setVisible(true);
 	    setResizable(false);
+	    
 		//pantallaCarga();
 	}
 	

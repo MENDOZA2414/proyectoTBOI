@@ -4,12 +4,12 @@ import javax.swing.JPanel;
 public class Carga extends JPanel {
 	public Carga(String ruta) {
 		//Propiedades del panel
-		setBackground(Color.decode(""));
+		//setBackground(Color.decode(""));
 		setLayout(null);
 		
 		//Fondo componentes del panel
 		JPanel fondo = new JPanel();
-		fondo.setBackground(Color.decode(""));
+	//	fondo.setBackground(Color.decode(""));
 		fondo.setSize(500, 300);
 		fondo.setLocation(0,150);
 		add(fondo);
