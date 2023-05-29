@@ -84,14 +84,27 @@ public class Ventana extends JFrame{
 				
 				System.out.println(keyCode);
 				if(keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP){
-					menu.setMenu1();
-					opcion = 1;
+					
+					if(opcion>1){
+						opcion --;
+					}
 					actualizar();
 				}
 				if(keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN){
-					menu.setMenu2();
-					opcion = 2;
+					
+					if(opcion<3){
+						opcion ++;
+					}
 					actualizar();
+				}
+				if(opcion==1){
+					menu.setMenu1();
+				}
+				if(opcion==2){
+					menu.setMenu2();
+				}
+				if(opcion==3){
+					menu.setMenu3();
 				}
 				if (keyCode == 10 || keyCode == 32) { // Realizar algo cuando se presiona la tecla enter
 					if(opcion == 1) {
@@ -102,7 +115,7 @@ public class Ventana extends JFrame{
 						keysJuego();
 		                actualizar();
 					}
-					if(opcion == 2) {
+					if(opcion == 3) {
 						System.exit(0);
 					}
 					//remove(inicio);

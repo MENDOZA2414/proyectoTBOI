@@ -10,6 +10,7 @@ public class Menu extends JPanel {
     private JLabel carga ;
     private ImageIcon imagen1 ;
     private ImageIcon imagen2;
+    private ImageIcon imagen3;
     
     public Menu (String ruta) {
         //Propiedades del panel
@@ -24,34 +25,43 @@ public class Menu extends JPanel {
 
 		ImageIcon imagen  = new ImageIcon(ruta+"menu1.png");
         ImageIcon imagenDos = new ImageIcon(ruta+"menu2.png");
-		
-        Image imagenGif = imagen.getImage();
+        ImageIcon imagenTres = new ImageIcon(ruta+"menu3.png");
 		
 		// Redimensionar la imagen
+        Image imagenGif = imagen.getImage();
 		Image imagenRedimensionada = imagenGif.getScaledInstance(1080, 690, Image.SCALE_DEFAULT);
 		 imagen1 = new ImageIcon(imagenRedimensionada);
 		 carga = new JLabel(imagen1);
 
-         imagenGif = imagenDos.getImage();
-		
          // Redimensionar la imagen
+         imagenGif = imagenDos.getImage();
          imagenRedimensionada = imagenGif.getScaledInstance(1080, 690, Image.SCALE_DEFAULT);
           imagen2 = new ImageIcon(imagenRedimensionada);
+
+          imagenGif = imagenTres.getImage();
+         imagenRedimensionada = imagenGif.getScaledInstance(1080, 690, Image.SCALE_DEFAULT);
+          imagen3 = new ImageIcon(imagenRedimensionada);
        
 
         //carga  = new JLabel(imagen);
 		fondo.add(carga);
     }
 
-    public void setMenu1(){ //W
+    public void setMenu1(){ 
     	carga.setIcon(imagen1);
         revalidate();
         repaint();
         
     }
-    public void setMenu2(){ // S
+    public void setMenu2(){ 
   
     	carga.setIcon(imagen2);
+        revalidate();
+        repaint();
+    }
+    public void setMenu3(){ 
+  
+    	carga.setIcon(imagen3);
         revalidate();
         repaint();
     }
