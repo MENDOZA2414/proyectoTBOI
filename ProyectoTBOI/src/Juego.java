@@ -18,6 +18,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.sound.sampled.FloatControl;
+import java.util.Random;
 
 public class Juego extends JPanel {
 
@@ -29,7 +30,9 @@ public class Juego extends JPanel {
     private static final int BALL_SPEED = 8;
     private static final int FPS = 60;
     private static final int SHOOT_DELAY = 450; //1000 = 1 segundo
-
+    
+    private Random random = new Random();
+    private int numeroAleatorio = random.nextInt(4) + 1; 
     private int characterX;
     private int characterY;
 
@@ -46,11 +49,15 @@ public class Juego extends JPanel {
     private Clip clip;
 
     private float volume;
-    private Objeto caca = new Objeto("resources/popo.png",100,100,100);
+    private Objeto caca = new Objeto("resources/popo.png",70,100,100);
+    private Objeto puertaArriba = new Objeto("resources/puertaArriba.png",80,352,20);
+    private Objeto puertaAbajo = new Objeto("resources/puertaAbajo.png",80,352,395);
+    
+    private Objeto puertaIzquierda = new Objeto("resources/puertaIzquierda.png",80,30,190);
+    private Objeto puertaDerecha = new Objeto("resources/puertaDerecha.png",80,710,190);
     
     public Juego() {
-        iniciarMusica();
-        
+        //iniciarMusica();
         characterX = WIDTH / 2;
         characterY = HEIGHT / 2;
         velocityX = 0;
@@ -62,7 +69,7 @@ public class Juego extends JPanel {
         try {
             isaac = ImageIO.read(new File("resources/isaacola.png"));
             tear = ImageIO.read(new File("resources/normaltear.png"));
-            fondo = ImageIO.read(new File("resources/instrucciones2.png"));
+            fondo = ImageIO.read(new File("resources/instrucciones.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }   
@@ -80,19 +87,36 @@ public class Juego extends JPanel {
         super.paint(g);
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-       
-        
         //fondo agregado
-        g.drawImage(fondo, 0, 0, WIDTH-16, HEIGHT-39, null);
+        g.drawImage(fondo, 0, 0, WIDTH, HEIGHT-28, null);
         
         g.drawImage(caca.getSprite(),caca.getX(),caca.getY(),caca.getTamaño(),caca.getTamaño(),null);
+        
+       
+
+        switch(numeroAleatorio) {
+        case 1:
+            g.drawImage(puertaArriba.getSprite(),puertaArriba.getX(),puertaArriba.getY(),puertaArriba.getTamaño()+20,puertaArriba.getTamaño()-20,null);
+
+        	break;
+        case 2:
+            g.drawImage(puertaAbajo.getSprite(),puertaAbajo.getX(),puertaAbajo.getY(),puertaAbajo.getTamaño()+20,puertaAbajo.getTamaño()-25,null);
+
+        	break;
+        case 3:
+            g.drawImage(puertaIzquierda.getSprite(),puertaIzquierda.getX(),puertaIzquierda.getY(),puertaIzquierda.getTamaño()-20,puertaIzquierda.getTamaño()+20,null);
+
+        	break;
+        case 4:
+            g.drawImage(puertaDerecha.getSprite(),puertaDerecha.getX(),puertaDerecha.getY(),puertaDerecha.getTamaño()-20,puertaDerecha.getTamaño()+20,null);
+        	break;
+        	
+        }
+
         
         // Dibuja el personaje de Isaac
         g.drawImage(isaac, characterX - CHARACTER_SIZE / 2, characterY - CHARACTER_SIZE / 2, CHARACTER_SIZE,CHARACTER_SIZE, null);
 
-    	
-    	
-    	
         // Dibuja las pelotas
         for (Ball ball : balls) {
             g.drawImage(tear, ball.x - BALL_SIZE / 2, ball.y - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE, null);
@@ -100,18 +124,6 @@ public class Juego extends JPanel {
         
 
     }
-    
-    /*Timer timer2 = new Timer(1000 / FPS, e -> {
-        
-        if (characterX <= 0 || characterX >= WIDTH - 110) {
-            characterX = -(characterX-5);
-        }
-        
-        if (characterY <= 0 || characterY >= HEIGHT - 110) {
-            characterY = -(characterY-5);
-        }
-
-    });*/
     
     private void update() {
         characterX += velocityX;
@@ -126,19 +138,19 @@ public class Juego extends JPanel {
         //si isaac llega a las paredes, detenerlo para que no pueda sobrepasarla
         if (characterX < 90) {
             characterX = 90;
-            velocityX = -velocityX;
+          
         }
-        if (characterX > WIDTH - 110) {
-            characterX = WIDTH - 110;
-            velocityX = -velocityX;
+        if (characterX > WIDTH - 95) {
+            characterX = WIDTH - 95;
+        
         }
         if (characterY < 50) {
             characterY = 50;
-            velocityY = -velocityY;
+           
         }
-        if (characterY > HEIGHT - 140) {
-            characterY = HEIGHT - 140;
-            velocityY = -velocityY;
+        if (characterY > HEIGHT - 135) {
+            characterY = HEIGHT - 135;
+           
         }
 
         // Comprueba si alguna pelota está fuera de los límites de la pantalla o las paredes
