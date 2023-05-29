@@ -6,6 +6,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Juego extends JPanel {
@@ -19,7 +22,8 @@ public class Juego extends JPanel {
     public Isaac isaac;
 
     private BufferedImage fondo;
-    private Objeto caca = new Objeto("resources/popo.png", 70, 100, 100);
+    public List<Objeto> objetos = new ArrayList<>();
+    
     private Objeto puertaArriba = new Objeto("resources/puertaArriba.png", 80, 352, 20);
     private Objeto puertaAbajo = new Objeto("resources/puertaAbajo.png", 80, 352, 395);
     private Objeto puertaIzquierda = new Objeto("resources/puertaIzquierda.png", 80, 30, 190);
@@ -38,8 +42,23 @@ public class Juego extends JPanel {
         Timer timer = new Timer(1000 / FPS, e -> {
             update();
             repaint();
+            for (Objeto objeto : objetos) {
+            	if(objeto.colisionObjeto(isaac.getFrame(), isaac.getX(), isaac.getY())) {
+            		System.out.println("Colision");
+            	}
+            }
         });
         timer.start();
+        
+        for(int i=0; i<5; i++) {
+            Random random = new Random();
+            int n = 50; // Límite inferior
+            int m = 450; // Límite superior
+
+            int x = random.nextInt(m - n + 1) + n;
+            int y = random.nextInt(m - n + 1) + n;
+        	objetos.add(new Objeto("resources/popo.png", 50, x, y));
+        }
     }
 
     @Override
@@ -51,8 +70,9 @@ public class Juego extends JPanel {
 
         g.drawImage(fondo, 0, 0, WIDTH, HEIGHT - 28, null);
 
-        g.drawImage(caca.getSprite(), caca.getX(), caca.getY(), caca.getTamaño(), caca.getTamaño(), null);
-
+        for (Objeto objeto : objetos) {
+            g.drawImage(objeto.getSprite(), objeto.getX(), objeto.getY(), objeto.getTamaño(), objeto.getTamaño(), null);
+        }
         switch (numeroAleatorio) {
 
             case 1:

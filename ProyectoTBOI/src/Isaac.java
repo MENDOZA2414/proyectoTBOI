@@ -97,7 +97,11 @@ public class Isaac {
         }
     }
 
-    public int getX() {
+    public BufferedImage getFrame() {
+		return isaac;
+	}
+
+	public int getX() {
         return x;
     }
 
@@ -129,7 +133,7 @@ public class Isaac {
         this.velocityY = velocityY;
     }
 
-    public int getCharacterSpeed(){
+	public int getCharacterSpeed(){
         return CHARACTER_SPEED;
     }
 }
