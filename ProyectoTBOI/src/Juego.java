@@ -1,23 +1,13 @@
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.sound.sampled.FloatControl;
 import java.util.Random;
 
 public class Juego extends JPanel {
@@ -46,9 +36,7 @@ public class Juego extends JPanel {
     private BufferedImage tear;
     private BufferedImage fondo;
 
-    private Clip clip;
-
-    private float volume;
+   
     private Objeto caca = new Objeto("resources/popo.png",70,100,100);
     private Objeto puertaArriba = new Objeto("resources/puertaArriba.png",80,352,20);
     private Objeto puertaAbajo = new Objeto("resources/puertaAbajo.png",80,352,395);
@@ -208,33 +196,7 @@ public class Juego extends JPanel {
         }
     }
 
-    private void iniciarMusica() {
-        try {
-            // Crear objeto Clip para reproducir el audio
-            clip = AudioSystem.getClip();
-
-            clip.open(AudioSystem.getAudioInputStream(new File("music/MainSong.wav").getAbsoluteFile()));
-
-            //ajustar volumen audio
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volume = 0.06f; // volumen
-            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-            gainControl.setValue(dB);
-            
-            // Reproducir el audio
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException l) {
-            l.printStackTrace();
-        }
-    }
     
-    private void detenerMusica() {
-        if (clip != null) {
-            clip.stop();
-            clip.close();
-        }
-    }
 
 	public int getVelocityX() {
 		return velocityX;

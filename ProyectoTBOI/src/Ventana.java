@@ -23,7 +23,7 @@ public class Ventana extends JFrame{
 	private Inicio inicio = new Inicio(ruta);
 	private Menu menu = new Menu(ruta);
 	private Juego juego = new Juego();
-	
+	private Sonido sonido = new Sonido() ;
 	public Ventana() {
 		//Propiedades de la ventana
 		super("The binding of Isaac");
@@ -167,13 +167,13 @@ public class Ventana extends JFrame{
 			            juego.shootRight();
 			            break;
 			        case KeyEvent.VK_M:
-			            /*if (clip.isRunning()) {   //Musica que puso Chris
+			            if (sonido.getClip().isRunning()) {   //Musica que puso Chris
 			                System.out.println("Muted...");
-			                clip.stop();
+			                sonido.getClip().stop();
 			            } else {
 			                System.out.println("Playing...");
-			                clip.start();
-			            }*/
+			                sonido.getClip().start();
+			            }
 			            break;
 			        case KeyEvent.VK_ESCAPE:
 			            System.out.println("Exit...");
