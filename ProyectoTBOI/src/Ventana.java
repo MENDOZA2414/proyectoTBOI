@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 public class Ventana extends JFrame{
 	
-	private int largo = 800;
-	private int ancho = 500;
+	private int largo = 1080;
+	private int ancho = 690;
 	private int contador = 0;
 
 	//Ruta de recursos 

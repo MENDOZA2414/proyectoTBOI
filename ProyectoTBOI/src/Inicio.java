@@ -11,10 +11,10 @@ public class Inicio extends JPanel{
 		//Fondo de inicio
 		JPanel fondo = new JPanel();
 		fondo.setBackground(Color.white);
-		fondo.setSize(800, 500);
+		fondo.setSize(1080, 690);
 		fondo.setLocation(0,0);
 		add(fondo);
 				
-		Imagen fondoInicio = new Imagen(ruta+"inicio.png",fondo);
+		Imagen fondoInicio = new Imagen(ruta+"inicio.png",1080,690,fondo);
 	}
 }
