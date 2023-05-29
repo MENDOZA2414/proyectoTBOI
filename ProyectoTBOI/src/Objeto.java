@@ -4,24 +4,30 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Objeto {
+	private int tamaño;
     private BufferedImage sprite;
-    private int tamaño;
     private int x;
     private int y;
 
     public Objeto(String spritePath, int tamaño, int x, int y) {
+    	this.tamaño = tamaño;
+    	
         try {
             this.sprite = ImageIO.read(new File(spritePath));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.tamaño = tamaño;
         this.x = x;
         this.y = y;
     }
     
-    public boolean colisionObjeto(BufferedImage frame, int jugadorX, int jugadorY) {
-        return false;
+    public boolean colisionObjeto(int tamañoJugador, int jugadorX, int jugadorY) {
+        if (jugadorX + tamañoJugador >= x && jugadorX <= x + tamaño &&
+            jugadorY + tamañoJugador >= y && jugadorY <= y + tamaño) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public int getX() {
@@ -39,4 +45,5 @@ public class Objeto {
 	public int getTamaño() {
 		return tamaño;
 	}
+ 
 }

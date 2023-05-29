@@ -43,7 +43,7 @@ public class Juego extends JPanel {
             update();
             repaint();
             for (Objeto objeto : objetos) {
-            	if(objeto.colisionObjeto(isaac.getFrame(), isaac.getX(), isaac.getY())) {
+            	if(objeto.colisionObjeto(isaac.getCharacterSize(), isaac.getX(), isaac.getY())) {
             		System.out.println("Colision");
             	}
             }

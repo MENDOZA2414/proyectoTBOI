@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -43,6 +44,8 @@ public class Isaac {
     }
 
     public void paint(Graphics g) {
+//    	g.setColor(Color.red);
+//        g.fillRect(200, 200, CHARACTER_SIZE, CHARACTER_SIZE);
         g.drawImage(isaac, x - CHARACTER_SIZE / 2, y - CHARACTER_SIZE / 2, CHARACTER_SIZE, CHARACTER_SIZE, null);
 
         for (Lagrima lagrima : lagrimas) {
@@ -132,6 +135,10 @@ public class Isaac {
     public void setVelocityY(int velocityY) {
         this.velocityY = velocityY;
     }
+
+	public static int getCharacterSize() {
+		return CHARACTER_SIZE;
+	}
 
 	public int getCharacterSpeed(){
         return CHARACTER_SPEED;
