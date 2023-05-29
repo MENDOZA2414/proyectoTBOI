@@ -1,0 +1,4 @@
+delia|1000
+Pepech|900
+Tilinesio|800
+Ana|100
