@@ -23,7 +23,7 @@ public class Ventana extends JFrame{
 	private Inicio inicio = new Inicio(ruta);
 	private Menu menu = new Menu(ruta);
 	private Juego juego = new Juego();
-	private Sonido sonido = new Sonido() ;
+	private Sonido sonido = new Sonido();
 	public Ventana() {
 		//Propiedades de la ventana
 		super("The binding of Isaac");
@@ -143,28 +143,28 @@ public class Ventana extends JFrame{
 
 			    switch (keyCode) {
 			        case KeyEvent.VK_A:
-			            juego.setVelocityX(-juego.getCharacterSpeed());
+			            juego.isaac.setVelocityX(-juego.isaac.getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_D:
-			        	juego.setVelocityX(juego.getCharacterSpeed());
+			        	juego.isaac.setVelocityX(juego.isaac.getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_W:
-			        	juego.setVelocityY(-juego.getCharacterSpeed());
+			        	juego.isaac.setVelocityY(-juego.isaac.getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_S:
-			        	juego.setVelocityY(juego.getCharacterSpeed());
+			        	juego.isaac.setVelocityY(juego.isaac.getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_UP:
-			            juego.shootUp();
+			            juego.isaac.shootUp();
 			            break;
 			        case KeyEvent.VK_DOWN:
-			            juego.shootDown();
+			            juego.isaac.shootDown();
 			            break;
 			        case KeyEvent.VK_LEFT:
-			            juego.shootLeft();
+			            juego.isaac.shootLeft();
 			            break;
 			        case KeyEvent.VK_RIGHT:
-			            juego.shootRight();
+			            juego.isaac.shootRight();
 			            break;
 			        case KeyEvent.VK_M:
 			            if (sonido.getClip().isRunning()) {   //Musica que puso Chris
@@ -186,9 +186,9 @@ public class Ventana extends JFrame{
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_D) {
-					juego.setVelocityX(0);
+					juego.isaac.setVelocityX(0);
 		        } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
-		        	juego.setVelocityY(0);
+		        	juego.isaac.setVelocityY(0);
 		        }	
 			}
 			
