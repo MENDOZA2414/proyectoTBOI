@@ -6,9 +6,16 @@
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Ventana extends JFrame{
@@ -17,18 +24,31 @@ public class Ventana extends JFrame{
 	private int ancho = 690;
 	private int contador = 0;
 
+	
 	//Ruta de recursos 
 	private String ruta = "resources/"; 
-	
+
+	private IngresarNombre ingresarNombre = new IngresarNombre(ruta); // <---------------------------------------
+	private PanelLeaderBoard panelLeaderBoard;
+
 	private Inicio inicio = new Inicio(ruta);
 	private Menu menu = new Menu(ruta);
 	private Juego juego = new Juego();
 	private Sonido sonido = new Sonido();
+
+	public String rutaTxt = ruta+"scores.txt"; // <---------------------------------------
+    public Score score;// <---------------------------------------
+    public ListaScores listaScores;//<--------
 	public Ventana() {
 		//Propiedades de la ventana
 		super("The binding of Isaac");
 		setSize(largo, ancho);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		score= new Score() ;// <---------------------------------------
+	    listaScores= new ListaScores();// <---------------------------------------
+	    cargarTxtScores();// <---------------------------------------
+	    panelLeaderBoard= new PanelLeaderBoard(ruta,listaScores.obtenerLista()); 
 	    
 		keysInicio();
 		add(inicio);
@@ -39,6 +59,62 @@ public class Ventana extends JFrame{
 	    
 		//pantallaCarga();
 	}
+	//------ mensaje de dialogo customizable----
+    public void mensaje(String texto){
+        JOptionPane.showMessageDialog(null, texto);
+    }
+	 //-------funcion para agregar del archivo txt los scores a la lista --------
+    private void cargarTxtScores() {
+        File ruta = new File(rutaTxt);
+        try{
+            FileReader fr = new FileReader(ruta);
+            BufferedReader br = new BufferedReader(fr);
+
+            String linea = null;
+            while((linea = br.readLine())!=null){ // --este while agrega a la lista todos los Scores del txt--
+                StringTokenizer st = new StringTokenizer(linea, "|"); // esto separa el renglon del txt para poder asignarle al score sus atributos
+                score = new Score();
+                score.setNombre(st.nextToken());
+                score.setScore(Integer.parseInt(st.nextToken())); //conversion a float
+                
+                listaScores.agregarScore(score);
+            }
+            br.close();
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+  //----- funcion para pasar lo de la lista Scores al txt----
+    public void grabar_txt(){
+        FileWriter fw;
+        PrintWriter pw;
+        try{
+            fw = new FileWriter(rutaTxt);
+            pw = new PrintWriter(fw);
+            
+            for(int i = 0; i < listaScores.cantidadScore(); i++){
+            	score = listaScores.obtenerScore(i);
+                pw.println(String.valueOf(score.getNombre()+"|"+score.getScore())); //pasa lo del objeto al archivo
+            }
+             pw.close();
+            
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+    public void crearNuevoScore(String nombre,int puntaje ){
+    	// evaluar antes si no existe nombre igual
+        score = new Score(nombre,puntaje);
+        
+        
+        listaScores.agregarScore(score);
+        listaScores.ordenarScores();//   ordenar el array antes de grabar
+       // mensaje("Creado correctamente");
+        grabar_txt();
+  
+        
+        
+    }
 	public void keysInicio(){
 		inicio.addKeyListener(new KeyListener() {
 
@@ -114,6 +190,11 @@ public class Ventana extends JFrame{
 						juego.requestFocusInWindow(); // Establece el foco en el panel de juego
 						keysJuego();
 		                actualizar();
+					}
+					if(opcion==2) {
+						remove(menu);
+						add(panelLeaderBoard);
+						 actualizar();
 					}
 					if(opcion == 3) {
 						System.exit(0);
