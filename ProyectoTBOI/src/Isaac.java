@@ -10,8 +10,8 @@ import javax.imageio.ImageIO;
 
 public class Isaac {
 
-    public static final int CHARACTER_SPEED = 4;
-    private static final int CHARACTER_SIZE = 62;
+    public static final int CHARACTER_SPEED = 8;
+    private static final int CHARACTER_SIZE = 72;
     private static final int BALL_SPEED = 5;
     private static final int SHOOT_DELAY = 450; // 1000 = 1 segundo
 

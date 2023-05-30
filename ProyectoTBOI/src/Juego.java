@@ -13,8 +13,8 @@ import java.util.Random;
 
 public class Juego extends JPanel {
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 500;
+    public static final int WIDTH = 1080;
+    public static final int HEIGHT = 690;
     private static final int FPS = 60;
 
     private Random random = new Random();
@@ -23,42 +23,34 @@ public class Juego extends JPanel {
 
     private BufferedImage fondo;
     public List<Objeto> objetos = new ArrayList<>();
+    public List<Puerta> puertas = new ArrayList<>();
     
-    private Objeto puertaArriba = new Objeto("resources/puertaArriba.png", 80, 352, 20);
-    private Objeto puertaAbajo = new Objeto("resources/puertaAbajo.png", 80, 352, 395);
-    private Objeto puertaIzquierda = new Objeto("resources/puertaIzquierda.png", 80, 30, 190);
-    private Objeto puertaDerecha = new Objeto("resources/puertaDerecha.png", 80, 710, 190);
-
     public Juego() {
         isaac = new Isaac(WIDTH / 2, HEIGHT / 2);
         isaac.lastShootTime = 0;
-
-        try {
-            fondo = ImageIO.read(new File("resources/instrucciones.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        
+        generarFondo("resources/instrucciones.png");
+        generarPuertas();
+        
         Timer timer = new Timer(1000 / FPS, e -> {
             update();
             repaint();
+            
+            //Colisiones puertas objetos
             for (Objeto objeto : objetos) {
-            	if(objeto.colisionObjeto(isaac.getCharacterSize(), isaac.getX(), isaac.getY())) {
-            		System.out.println("Colision");
+            	if(objeto.detectarColision(isaac)) {
+            		System.out.println("Colision objeto");
+            	}
+            }
+            for (Puerta puerta : puertas) {
+            	if(puerta.detectarColision(isaac) && puerta.isAbierta()) {
+            		System.out.println("Colision puerta");
+            		nuevaSala();
             	}
             }
         });
         timer.start();
-        
-        for(int i=0; i<5; i++) {
-            Random random = new Random();
-            int n = 50; // Límite inferior
-            int m = 450; // Límite superior
-
-            int x = random.nextInt(m - n + 1) + n;
-            int y = random.nextInt(m - n + 1) + n;
-        	objetos.add(new Objeto("resources/popo.png", 50, x, y));
-        }
+        generarObjetos();
     }
 
     @Override
@@ -68,27 +60,27 @@ public class Juego extends JPanel {
 
         //Fondo agregado
 
-        g.drawImage(fondo, 0, 0, WIDTH, HEIGHT - 28, null);
+        g.drawImage(fondo, 0, 0, WIDTH, HEIGHT, null);
 
         for (Objeto objeto : objetos) {
             g.drawImage(objeto.getSprite(), objeto.getX(), objeto.getY(), objeto.getTamaño(), objeto.getTamaño(), null);
         }
+        
         switch (numeroAleatorio) {
-
-            case 1:
-                g.drawImage(puertaArriba.getSprite(), puertaArriba.getX(), puertaArriba.getY(), puertaArriba.getTamaño() + 20, puertaArriba.getTamaño() - 20, null);
+        case 1:
+            g.drawImage(puertas.get(0).getSprite(), puertas.get(0).getX(), puertas.get(0).getY(), puertas.get(0).getTamaño() + 20, puertas.get(0).getTamaño() - 20, null);
             break;
 
-            case 2:
-                g.drawImage(puertaAbajo.getSprite(), puertaAbajo.getX(), puertaAbajo.getY(), puertaAbajo.getTamaño() + 20, puertaAbajo.getTamaño() - 25, null);
+        case 2:    
+            g.drawImage(puertas.get(1).getSprite(), puertas.get(1).getX(), puertas.get(1).getY(), puertas.get(1).getTamaño() + 20, puertas.get(1).getTamaño() - 25, null);
             break;
 
-            case 3:
-                g.drawImage(puertaIzquierda.getSprite(), puertaIzquierda.getX(), puertaIzquierda.getY(), puertaIzquierda.getTamaño() - 20, puertaIzquierda.getTamaño() + 20, null);
+        case 3:
+            g.drawImage(puertas.get(2).getSprite(), puertas.get(2).getX(), puertas.get(2).getY(), puertas.get(2).getTamaño() - 20, puertas.get(2).getTamaño() + 20, null);
             break;
-            
-            case 4:
-                g.drawImage(puertaDerecha.getSprite(), puertaDerecha.getX(), puertaDerecha.getY(), puertaDerecha.getTamaño() - 20, puertaDerecha.getTamaño() + 20, null);
+
+        case 4:
+            g.drawImage(puertas.get(3).getSprite(), puertas.get(3).getX(), puertas.get(3).getY(), puertas.get(3).getTamaño() - 20, puertas.get(3).getTamaño() + 20, null);
             break;
         }
 
@@ -98,8 +90,90 @@ public class Juego extends JPanel {
             lagrima.paint(g);
         }
     }
+    
+    public void generarObjetos() {
+        int areaAncho = 780;
+        int areaAlto = 400;
+        int limiteInferiorX = (Juego.WIDTH - areaAncho) / 2;
+        int limiteSuperiorX = limiteInferiorX + areaAncho;
+        int limiteInferiorY = (Juego.HEIGHT - areaAlto) / 2;
+        int limiteSuperiorY = limiteInferiorY + areaAlto;
 
-    private void update() {
+        for (int i = 0; i < 5; i++) {
+            Random random = new Random();
+            int x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
+            int y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
+            objetos.add(new Objeto("resources/popo.png", 50, x, y));
+        }
+    }
+    
+    public void eliminarObjetos() {
+    	objetos.clear();
+    }
+    
+    private void generarPuertas() {
+        int puertaAncho = 90;
+        int puertaAlto = 352;
+
+        // Puerta arriba
+        int puertaArribaX = (WIDTH - puertaAncho) / 2;
+        int puertaArribaY = 40;
+        Puerta puertaArriba = new Puerta("resources/puertaArriba.png", puertaAncho, puertaArribaX, puertaArribaY, true);
+        puertas.add(puertaArriba);
+   
+        // Puerta abajo    
+        int puertaAbajoX = (WIDTH - puertaAncho) / 2;
+        int puertaAbajoY = HEIGHT - puertaAlto + 245;
+        Puerta puertaAbajo = new Puerta("resources/puertaAbajo.png", puertaAncho, puertaAbajoX, puertaAbajoY, true);
+        puertas.add(puertaAbajo);   
+
+        // Puerta izquierda
+        int puertaIzquierdaX = 45;
+        int puertaIzquierdaY = (HEIGHT - puertaAncho - 20) / 2;
+        Puerta puertaIzquierda = new Puerta("resources/puertaIzquierda.png", puertaAncho, puertaIzquierdaX, puertaIzquierdaY, true);
+        puertas.add(puertaIzquierda);
+
+        // Puerta derecha
+        int puertaDerechaX = WIDTH - puertaAncho - 25;
+        int puertaDerechaY = (HEIGHT - puertaAncho - 20) / 2;
+        Puerta puertaDerecha = new Puerta("resources/puertaDerecha.png", puertaAncho, puertaDerechaX, puertaDerechaY, true);
+        puertas.add(puertaDerecha);
+    }
+
+    public void nuevaSala() {
+        eliminarObjetos();
+        numeroAleatorio = random.nextInt(4) + 1;
+        switch (numeroAleatorio) {
+            case 1:
+                isaac.setX(puertas.get(0).getX());
+                isaac.setY(puertas.get(0).getY() + puertas.get(0).getTamaño());
+                break;
+            case 2:
+                isaac.setX(puertas.get(1).getX());
+                isaac.setY(puertas.get(1).getY() - puertas.get(1).getTamaño());
+                break;
+            case 3:
+                isaac.setX(puertas.get(2).getX() + puertas.get(2).getTamaño());
+                isaac.setY(puertas.get(2).getY());
+                break;
+            case 4:
+                isaac.setX(puertas.get(3).getX() - puertas.get(3).getTamaño());
+                isaac.setY(puertas.get(3).getY());
+                break;
+        }
+        generarFondo("resources/mapa.png");
+        generarObjetos();
+    }
+
+    public void generarFondo(String ruta) {
+        try {
+            fondo = ImageIO.read(new File(ruta));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+	private void update() {
 
         isaac.update(isaac.getVelocityX(), isaac.getVelocityY());
 

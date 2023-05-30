@@ -21,9 +21,23 @@ public class Objeto {
         this.y = y;
     }
     
-    public boolean colisionObjeto(int tamañoJugador, int jugadorX, int jugadorY) {
-        if (jugadorX + tamañoJugador >= x && jugadorX <= x + tamaño &&
-            jugadorY + tamañoJugador >= y && jugadorY <= y + tamaño) {
+    public boolean detectarColision(Isaac jugador) {
+        int ancho1 = this.getTamaño();
+        int alto1 = this.getTamaño();
+        int x1 = this.getX();
+        int y1 = this.getY();
+
+        int ancho2 = jugador.getCharacterSize();
+        int alto2 = jugador.getCharacterSize();
+        int x2 = jugador.getX();
+        int y2 = jugador.getY();
+
+        boolean colisionIzquierda = x1 + ancho1 > x2 && x1 < x2;
+        boolean colisionDerecha = x1 < x2 + ancho2 && x1 + ancho1 > x2;
+        boolean colisionArriba = y1 + alto1 > y2 && y1 < y2 + alto2;
+        boolean colisionAbajo = y1 < y2 + alto2 - alto2/2 && y1 + alto1 > y2;
+
+        if (colisionIzquierda && colisionDerecha && colisionArriba && colisionAbajo) {
             return true;
         } else {
             return false;
@@ -38,7 +52,11 @@ public class Objeto {
         return y;
     }
 
-    public BufferedImage getSprite() {
+    public void setSprite(BufferedImage sprite) {
+		this.sprite = sprite;
+	}
+
+	public BufferedImage getSprite() {
 		return sprite;
 	}
 
