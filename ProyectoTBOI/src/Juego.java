@@ -42,6 +42,9 @@ public class Juego extends JPanel {
             		System.out.println("Colision objeto");
             	}
             }
+            for (Enemigo enemigo : enemigos) {
+            	enemigo.mover(700, 600);
+            }
             for (Puerta puerta : puertas) {
             	if(puerta.detectarColision(isaac) && puerta.isAbierta()) {
             		System.out.println("Colision puerta");
@@ -66,10 +69,6 @@ public class Juego extends JPanel {
             g.drawImage(objeto.getSprite(), objeto.getX(), objeto.getY(), objeto.getTamaño(), objeto.getTamaño(), null);
         }
         
-        for (Enemigo enemigo : enemigos) {
-            g.drawImage(enemigo.getSprite(), enemigo.getX(), enemigo.getY(), enemigo.getTamaño(), enemigo.getTamaño(), null);
-        }
-        
         switch (numeroAleatorio) {
         case 1:
         	puertas.get(0).setAbierta(true);
@@ -90,6 +89,9 @@ public class Juego extends JPanel {
         	puertas.get(3).setAbierta(true);
             g.drawImage(puertas.get(3).getSprite(), puertas.get(3).getX(), puertas.get(3).getY(), puertas.get(3).getTamaño() - 20, puertas.get(3).getTamaño() + 20, null);
             break;
+        }
+        for (Enemigo enemigo : enemigos) {
+            g.drawImage(enemigo.getSprite(), enemigo.getX(), enemigo.getY(), enemigo.getTamaño(), enemigo.getTamaño(), null);
         }
 
         isaac.paint(g);
@@ -300,17 +302,17 @@ public class Juego extends JPanel {
             lagrima.update();
         }
 
-        if (isaac.getX() < 90) {
+        if (isaac.getX() < 130) {
             isaac.setVelocityX(0);
-            isaac.setX(90);
+            isaac.setX(130);
         }
-        if (isaac.getX() > WIDTH - 95) {
+        if (isaac.getX() > WIDTH - 110) {
             isaac.setVelocityX(0);
-            isaac.setX(WIDTH - 95);
+            isaac.setX(WIDTH - 110);
         }
-        if (isaac.getY() < 50) {
+        if (isaac.getY() < 120) {
             isaac.setVelocityY(0);
-            isaac.setY(50);
+            isaac.setY(120);
         }
         if (isaac.getY() > HEIGHT - 135) {
             isaac.setVelocityY(0);

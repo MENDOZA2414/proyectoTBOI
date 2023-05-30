@@ -46,16 +46,16 @@ public class Enemigo {
         int cambioX = random.nextInt(3) - 1; //Valores aleatorios entre -1 y 1
         int cambioY = random.nextInt(3) - 1; //Valores aleatorios entre -1 y 1
 
-        x += velocidad * cambioX;
-        y += velocidad * cambioY;
+        int nuevaX = x + velocidad * cambioX;
+        int nuevaY = y + velocidad * cambioY;
 
-		//Comprueba que el enemigo no se salga del panel
-		if (x <= 0 || x >= panelAncho - getSprite().getWidth()) {
-			x = -x;
-		}
-		
-		if (y <= 0 || y >= panelAlto - getSprite().getHeight()) {
-			y = -y;
-		}
+        // Comprueba si las nuevas coordenadas están dentro de los límites del panel
+        if (nuevaX >= 0 && nuevaX <= panelAncho - getSprite().getWidth()) {
+            x = nuevaX;
+        }
+        
+        if (nuevaY >= 0 && nuevaY <= panelAlto - getSprite().getHeight()) {
+            y = nuevaY;
+        }
     }
 }
