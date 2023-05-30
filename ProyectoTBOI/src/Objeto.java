@@ -63,5 +63,4 @@ public class Objeto {
 	public int getTamaño() {
 		return tamaño;
 	}
- 
 }
