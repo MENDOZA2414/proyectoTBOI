@@ -23,6 +23,7 @@ public class Juego extends JPanel {
 
     private BufferedImage fondo;
     public List<Objeto> objetos = new ArrayList<>();
+    public List<Enemigo> enemigos = new ArrayList<>();
     public List<Puerta> puertas = new ArrayList<>();
     
     public Juego() {
@@ -31,7 +32,6 @@ public class Juego extends JPanel {
         
         generarFondo("resources/instrucciones.png");
         generarPuertas();
-        
         Timer timer = new Timer(1000 / FPS, e -> {
             update();
             repaint();
@@ -66,6 +66,10 @@ public class Juego extends JPanel {
             g.drawImage(objeto.getSprite(), objeto.getX(), objeto.getY(), objeto.getTamaño(), objeto.getTamaño(), null);
         }
         
+        for (Enemigo enemigo : enemigos) {
+            g.drawImage(enemigo.getSprite(), enemigo.getX(), enemigo.getY(), enemigo.getTamaño(), enemigo.getTamaño(), null);
+        }
+        
         switch (numeroAleatorio) {
         case 1:
         	puertas.get(0).setAbierta(true);
@@ -96,8 +100,8 @@ public class Juego extends JPanel {
     }
     
     //Variables globales para controlar la cantidad de piedras y cacas
-    private int cantidadPiedras = 10;
-    private int cantidadPiedrasPicos = 3;
+    private int cantidadPiedras = 6;
+    //private int cantidadPiedrasPicos = 3;
     private int cantidadCacas = 3;
 
     public void generarObjetos() {
@@ -140,18 +144,18 @@ public class Juego extends JPanel {
         }
         
         // Generar rocas con picos
-        for (int i = 0; i < cantidadPiedrasPicos; i++) {
-            int x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
-            int y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
-
-            // Verificar colisión con otros objetos generados
-            while (verificarColisionConObjetos(x, y, objetos) || verificarColisionConAdyacentes(x, y, objetos)) {
-                x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
-                y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
-            }
-
-            objetos.add(new Objeto("resources/rocaPicos.png", 70, x, y));
-        }
+//        for (int i = 0; i < cantidadPiedrasPicos; i++) {
+//            int x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
+//            int y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
+//
+//            // Verificar colisión con otros objetos generados
+//            while (verificarColisionConObjetos(x, y, objetos) || verificarColisionConAdyacentes(x, y, objetos)) {
+//                x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
+//                y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
+//            }
+//
+//            objetos.add(new Objeto("resources/rocaPicos.png", 70, x, y));
+//        }
     }
 
     private boolean verificarColisionConAdyacentes(int x, int y, List<Objeto> objetos) {
@@ -217,29 +221,67 @@ public class Juego extends JPanel {
         puertas.add(puertaDerecha);
     }
 
+    public void generarEnemigos() {
+        int areaAncho = 700;
+        int areaAlto = 340;
+        
+        int limiteInferiorX = (Juego.WIDTH - areaAncho) / 2;
+        int limiteSuperiorX = limiteInferiorX + areaAncho;
+        int limiteInferiorY = (Juego.HEIGHT - areaAlto) / 2;
+        int limiteSuperiorY = limiteInferiorY + areaAlto;
+        
+        Random random = new Random();
+        int numeroAleatorio = random.nextInt(4) + 1;
+
+        for (int i = 0; i < numeroAleatorio; i++) {
+            int x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
+            int y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
+
+            // Verificar colisión con otros objetos generados
+            while (verificarColisionConObjetos(x, y, objetos) || verificarColisionConAdyacentes(x, y, objetos)) {
+                x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
+                y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
+            }
+
+            enemigos.add(new Enemigo("resources/Horf.png", 150, x, y, 10));
+        }
+    }
+    
+    public void eliminarEnemigos(){
+    	enemigos.clear();
+    }
+    
+    int nuevoAleatorio;
     public void nuevaSala() {
         eliminarObjetos();
-        numeroAleatorio = random.nextInt(4) + 1;
-        switch (numeroAleatorio) {
-            case 1:
-                isaac.setX(puertas.get(0).getX() + puertas.get(0).getTamaño() / 2);
-                isaac.setY(puertas.get(0).getY() + puertas.get(0).getTamaño());
-                break;
-            case 2:
-                isaac.setX(puertas.get(1).getX() + puertas.get(1).getTamaño() / 2);
-                isaac.setY(puertas.get(1).getY() - puertas.get(1).getTamaño() / 2);
-                break;
-            case 3:
-                isaac.setX(puertas.get(2).getX() + puertas.get(2).getTamaño());
-                isaac.setY(puertas.get(2).getY() + puertas.get(2).getTamaño() / 2);
-                break;
-            case 4:
-                isaac.setX(puertas.get(3).getX() - (puertas.get(3).getTamaño() / 2) + 30);
-                isaac.setY(puertas.get(3).getY() + puertas.get(3).getTamaño() / 2);
-                break;
-        }
+        eliminarEnemigos();
+        do {
+        	nuevoAleatorio = random.nextInt(4) + 1;
+        	
+        } while(nuevoAleatorio == numeroAleatorio);
+        
+        numeroAleatorio = nuevoAleatorio;
+    	switch (numeroAleatorio) {
+    	case 1:  
+    		isaac.setX(puertas.get(0).getX() + puertas.get(0).getTamaño() / 2);
+    		isaac.setY(puertas.get(0).getY() + puertas.get(0).getTamaño());
+    		break;
+    	case 2:
+    		isaac.setX(puertas.get(1).getX() + puertas.get(1).getTamaño() / 2);
+    		isaac.setY(puertas.get(1).getY() - puertas.get(1).getTamaño() / 2);
+    		break;
+    	case 3:
+    		isaac.setX(puertas.get(2).getX() + puertas.get(2).getTamaño());
+    		isaac.setY(puertas.get(2).getY() + puertas.get(2).getTamaño() / 2);
+    		break;
+    	case 4:
+    		isaac.setX(puertas.get(3).getX() - (puertas.get(3).getTamaño() / 2) + 30);
+    		isaac.setY(puertas.get(3).getY() + puertas.get(3).getTamaño() / 2);
+    		break;
+    	}
         generarFondo("resources/mapa.png");
         generarObjetos();
+        generarEnemigos();
     }
 
     public void generarFondo(String ruta) {

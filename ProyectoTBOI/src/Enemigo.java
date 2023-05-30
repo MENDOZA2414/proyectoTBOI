@@ -36,6 +36,10 @@ public class Enemigo {
 		return sprite;
 	}
 
+	public int getTamaño() {
+		return tamaño;
+	}
+
 	public void mover(int panelAncho, int panelAlto) {
 
         Random random = new Random();
