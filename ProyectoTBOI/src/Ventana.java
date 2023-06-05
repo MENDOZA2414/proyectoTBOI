@@ -56,7 +56,6 @@ public class Ventana extends JFrame{
 	    setLocationRelativeTo(null);
 	    setVisible(true);
 	    setResizable(false);
-	    
 		//pantallaCarga();
 	}
 	//------ mensaje de dialogo customizable----
@@ -111,9 +110,6 @@ public class Ventana extends JFrame{
         listaScores.ordenarScores();//   ordenar el array antes de grabar
        // mensaje("Creado correctamente");
         grabar_txt();
-  
-        
-        
     }
 	public void keysInicio(){
 		inicio.addKeyListener(new KeyListener() {
@@ -233,49 +229,47 @@ public class Ventana extends JFrame{
 			}
 
 			public void keyPressed(KeyEvent e) {
-			    int keyCode = e.getKeyCode();
-
-			    switch (keyCode) {
-			        case KeyEvent.VK_A:
-			            juego.getIsaac().setVelocityX(-juego.getIsaac().getCharacterSpeed());
-			            break;
-			        case KeyEvent.VK_D:
-			        	juego.getIsaac().setVelocityX(juego.getIsaac().getCharacterSpeed());
-			            break;
-			        case KeyEvent.VK_W:
-			        	juego.getIsaac().setVelocityY(-juego.getIsaac().getCharacterSpeed());
-			            break;
-			        case KeyEvent.VK_S:
-			        	juego.getIsaac().setVelocityY(juego.getIsaac().getCharacterSpeed());
-			            break;
-			        case KeyEvent.VK_UP:
-			            juego.getIsaac().shootUp();
-			            break;
-			        case KeyEvent.VK_DOWN:
-			            juego.getIsaac().shootDown();
-			            break;
-			        case KeyEvent.VK_LEFT:
-			            juego.getIsaac().shootLeft();
-			            break;
-			        case KeyEvent.VK_RIGHT:
-			            juego.getIsaac().shootRight();
-			            break;
-			        case KeyEvent.VK_M:
-			            if (sonido.getClip().isRunning()) {   //Musica que puso Chris
-			                System.out.println("Muted...");
-			                sonido.getClip().stop();
-			            } else {
-			                System.out.println("Playing...");
-			                sonido.getClip().start();
-			            }
-			            break;
-			        case KeyEvent.VK_ESCAPE:
-			            System.out.println("Exit...");
-			            System.exit(0);
-			            break;
-			    }
+			    int keyCode = e.getKeyCode();			    	
+		    	switch (keyCode) {
+		    	case KeyEvent.VK_A:
+		    		juego.getIsaac().setVelocityX(-juego.getIsaac().getCharacterSpeed());
+		    		break;
+		    	case KeyEvent.VK_D:
+		    		juego.getIsaac().setVelocityX(juego.getIsaac().getCharacterSpeed());
+		    		break;
+		    	case KeyEvent.VK_W:
+		    		juego.getIsaac().setVelocityY(-juego.getIsaac().getCharacterSpeed());
+		    		break;
+		    	case KeyEvent.VK_S:
+		    		juego.getIsaac().setVelocityY(juego.getIsaac().getCharacterSpeed());
+		    		break;
+		    	case KeyEvent.VK_UP:
+		    		juego.getIsaac().shootUp();
+		    		break;
+		    	case KeyEvent.VK_DOWN:
+		    		juego.getIsaac().shootDown();
+		    		break;
+		    	case KeyEvent.VK_LEFT:
+		    		juego.getIsaac().shootLeft();
+		    		break;
+		    	case KeyEvent.VK_RIGHT:
+		    		juego.getIsaac().shootRight();
+		    		break;
+		    	case KeyEvent.VK_M:
+		    		if (sonido.getClip().isRunning()) {   //Musica que puso Chris
+		    			System.out.println("Muted...");
+		    			sonido.getClip().stop();
+		    		} else {
+		    			System.out.println("Playing...");
+		    			sonido.getClip().start();
+		    		}
+		    		break;
+		    	case KeyEvent.VK_ESCAPE:
+		    		System.out.println("Exit...");
+		    		System.exit(0);
+		    		break;
+		    	}
 			}
-
 
 			@Override
 			public void keyReleased(KeyEvent e) {

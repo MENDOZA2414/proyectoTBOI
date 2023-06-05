@@ -6,22 +6,28 @@ import java.util.Random;
 
 public class Enemigo {
 	
-	private int tamaño;
+	private int ancho;
+	private int alto;
     private BufferedImage sprite;
     private int x;
     private int y;
     private int velocidad;
-
-    public Enemigo(String spritePath, int tamaño, int x, int y, int velocidad) {
-    	this.tamaño = tamaño;
+    private int vida;
+    private String nombre;
+    
+    public Enemigo(String spritePath, String nombre, int ancho, int alto, int x, int y, int velocidad, int vida) {
+    	this.ancho = ancho;
+    	this.alto = alto;
         try {
             this.sprite = ImageIO.read(new File(spritePath));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.nombre = nombre;
         this.x = x;
         this.y = y;
         this.velocidad = velocidad;
+        this.vida = vida;
     }
 
     public int getX() {
@@ -36,8 +42,16 @@ public class Enemigo {
 		return sprite;
 	}
 
-	public int getTamaño() {
-		return tamaño;
+	public String getNombre() {
+		return nombre;
+	}
+
+	public int getAncho() {
+		return ancho;
+	}
+
+	public int getAlto() {
+		return alto;
 	}
 
 	public void mover(int panelAncho, int panelAlto) {
@@ -58,4 +72,12 @@ public class Enemigo {
             y = nuevaY;
         }
     }
+
+	public int getVida() {
+		return vida;
+	}
+
+	public void setVida(int vida) {
+		this.vida = vida;
+	}
 }

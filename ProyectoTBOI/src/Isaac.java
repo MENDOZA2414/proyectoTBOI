@@ -28,7 +28,6 @@ public class Isaac {
     public long lastShootTime;  // Tiempo del último disparo
     private int vidas = 6;
     private boolean invencible = false;
-    private long tiempoInicioInvencibilidad;
 
     public Isaac(int x, int y) {
         this.x = x;
@@ -137,9 +136,9 @@ public class Isaac {
     public boolean detectarColision(Enemigo enemigo) {
     	boolean colision = false;
     	if(!isInvencible()){
-    			
-    		int ancho1 = enemigo.getTamaño();
-    		int alto1 = enemigo.getTamaño();
+    		
+    		int ancho1 = enemigo.getAncho();
+    		int alto1 = enemigo.getAlto();
     		int x1 = enemigo.getX();
     		int y1 = enemigo.getY();
     		
@@ -171,6 +170,66 @@ public class Isaac {
     	return colision;
     }
     
+    public boolean colisionLagrima(Objeto objeto) {    
+    	boolean colision = false;
+    	 for (int i = 0; i < lagrimas.size(); i++) {
+    	    Lagrima lagrima = lagrimas.get(i);
+        	
+    		int ancho1 = objeto.getTamaño();
+    		int alto1 = objeto.getTamaño();
+    		int x1 = objeto.getX();
+    		int y1 = objeto.getY();
+    		
+    		int ancho2 = lagrima.getTamaño();
+    		int alto2 = lagrima.getTamaño();
+    		int x2 = lagrima.getX();
+    		int y2 = lagrima.getY();
+    		
+    		boolean colisionIzquierda = x1 + ancho1 > x2 && x1 < x2;
+    		boolean colisionDerecha = x1 < x2 + ancho2 && x1 + ancho1 > x2;
+    		boolean colisionArriba = y1 + alto1 > y2 && y1 < y2 + alto2;
+    		boolean colisionAbajo = y1 < y2 + alto2 - alto2/2 && y1 + alto1 > y2;
+    		
+    		if (colisionIzquierda && colisionDerecha && colisionArriba && colisionAbajo) {
+                lagrimas.remove(i);
+    			colision = true;
+            } else {
+            	colision = false;
+            }
+    	}
+        return colision;
+    }
+    
+    public boolean colisionLagrima(Enemigo enemigo) {    
+    	boolean colision = false;
+    	 for (int i = 0; i < lagrimas.size(); i++) {
+    	    Lagrima lagrima = lagrimas.get(i);
+        	
+    		int ancho1 = enemigo.getAncho();
+    		int alto1 = enemigo.getAlto();
+    		int x1 = enemigo.getX();
+    		int y1 = enemigo.getY();
+    		
+    		int ancho2 = lagrima.getTamaño();
+    		int alto2 = lagrima.getTamaño();
+    		int x2 = lagrima.getX();
+    		int y2 = lagrima.getY();
+    		
+    		boolean colisionIzquierda = x1 + ancho1 > x2 && x1 < x2;
+    		boolean colisionDerecha = x1 < x2 + ancho2 && x1 + ancho1 > x2;
+    		boolean colisionArriba = y1 + alto1 > y2 && y1 < y2 + alto2;
+    		boolean colisionAbajo = y1 < y2 + alto2 - alto2/2 && y1 + alto1 > y2;
+    		
+    		if (colisionIzquierda && colisionDerecha && colisionArriba && colisionAbajo) {
+                lagrimas.remove(i);
+    			colision = true;
+            } else {
+            	colision = false;
+            }
+    	}
+        return colision;
+    }
+
 	public BufferedImage getFrame() {
 		return isaac;
 	}

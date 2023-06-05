@@ -7,14 +7,13 @@ import javax.imageio.ImageIO;
 
 public class Lagrima {
 
-    private static final int BALL_SIZE = 30;
-
+    private int tamaño = 30;
     private int x;
     private int y;
     private int velocityX;
     private int velocityY;
     private BufferedImage tear;
-
+    
     public Lagrima(int initialX, int initialY, int velocityX, int velocityY) {
         x = initialX;
         y = initialY;
@@ -34,7 +33,7 @@ public class Lagrima {
     }
 
     public void paint(Graphics g) {
-        g.drawImage(tear, x - BALL_SIZE / 2, y - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE, null);
+        g.drawImage(tear, x - tamaño / 2, y - tamaño / 2, tamaño, tamaño, null);
     }
 
     public int getX() {
@@ -44,4 +43,8 @@ public class Lagrima {
     public int getY() {
         return y;
     }
+
+	public int getTamaño() {
+		return tamaño;
+	}
 }
