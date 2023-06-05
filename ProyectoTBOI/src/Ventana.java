@@ -34,6 +34,7 @@ public class Ventana extends JFrame{
 	private Inicio inicio = new Inicio(ruta);
 	private Menu menu = new Menu(ruta);
 	private Juego juego = new Juego();
+	private GameOver gameover = new GameOver(ruta);
 	private Sonido sonido = new Sonido();
 
 	public String rutaTxt = ruta+"scores.txt"; // <---------------------------------------
@@ -57,6 +58,18 @@ public class Ventana extends JFrame{
 	    setVisible(true);
 	    setResizable(false);
 		//pantallaCarga();
+	    
+	    Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(juego.getIsaac().getVidas() == 0) {
+                	remove(juego);
+                	add(gameover);
+                    actualizar();
+                }
+            }
+        }, 0, 100);
 	}
 	//------ mensaje de dialogo customizable----
     public void mensaje(String texto){
