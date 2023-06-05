@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,16 +16,18 @@ public class Juego extends JPanel {
 
     public static final int WIDTH = 1080;
     public static final int HEIGHT = 690;
-    private static final int FPS = 60;
+    public static final int FPS = 60;
 
     private Random random = new Random();
     private int numeroAleatorio = random.nextInt(4) + 1;
-    public Isaac isaac;
+    private Isaac isaac;
 
     private BufferedImage fondo;
-    public List<Objeto> objetos = new ArrayList<>();
-    public List<Enemigo> enemigos = new ArrayList<>();
-    public List<Puerta> puertas = new ArrayList<>();
+    private List<Objeto> objetos = new ArrayList<>();
+    private List<Enemigo> enemigos = new ArrayList<>();
+    private List<Puerta> puertas = new ArrayList<>();
+    
+    private Objeto corazon = new Objeto("resources/corazon.png", 20);
     
     public Juego() {
         isaac = new Isaac(WIDTH / 2, HEIGHT / 2);
@@ -36,21 +39,26 @@ public class Juego extends JPanel {
             update();
             repaint();
             
-            //Colisiones puertas objetos
+            //Colisiones objetos
             for (Objeto objeto : objetos) {
-            	if(objeto.detectarColision(isaac)) {
-            		System.out.println("Colision objeto");
+            	if(isaac.detectarColision(objeto)) {
             	}
             }
+            //Colisiones enemigos
             for (Enemigo enemigo : enemigos) {
-            	enemigo.mover(700, 600);
+            	if(isaac.detectarColision(enemigo)) {
+            	}
             }
+            //Colicion puertas
             for (Puerta puerta : puertas) {
-            	if(puerta.detectarColision(isaac) && puerta.isAbierta()) {
-            		System.out.println("Colision puerta");
+            	if(isaac.detectarColision(puerta) && puerta.isAbierta()) {
             		puerta.setAbierta(false);
             		nuevaSala();
             	}
+            }
+            //Movimiento enemigos
+            for (Enemigo enemigo : enemigos) {
+            	enemigo.mover(700, 600);
             }
         });
         timer.start();
@@ -98,6 +106,13 @@ public class Juego extends JPanel {
 
         for (Lagrima lagrima : isaac.lagrimas) {
             lagrima.paint(g);
+        }
+        
+        //VIDAS
+        g.setColor(Color.RED);
+        for (int i = 0; i < isaac.getVidas(); i++) {
+            int x = 10 + (i * (20 + 5));
+            g.drawImage(corazon.getSprite(), x, 10, corazon.getTamaño(), corazon.getTamaño(), null);
         }
     }
     
@@ -185,7 +200,6 @@ public class Juego extends JPanel {
         return false; // No hay colisión
     }
 
-    
     private boolean verificarColision(int x1, int y1, int x2, int y2, int ancho, int alto) {
         return x1 < x2 + ancho && x1 + 50 > x2 && y1 < y2 + alto && y1 + 50 > y2;
     }
@@ -321,4 +335,8 @@ public class Juego extends JPanel {
 
         isaac.lagrimas.removeIf(lagrima -> lagrima.getX() < 85 || lagrima.getX() > WIDTH - 110 || lagrima.getY() < 85 || lagrima.getY() > HEIGHT - 110);
     }
+
+	public Isaac getIsaac() {
+		return isaac;
+	}
 }

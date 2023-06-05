@@ -237,28 +237,28 @@ public class Ventana extends JFrame{
 
 			    switch (keyCode) {
 			        case KeyEvent.VK_A:
-			            juego.isaac.setVelocityX(-juego.isaac.getCharacterSpeed());
+			            juego.getIsaac().setVelocityX(-juego.getIsaac().getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_D:
-			        	juego.isaac.setVelocityX(juego.isaac.getCharacterSpeed());
+			        	juego.getIsaac().setVelocityX(juego.getIsaac().getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_W:
-			        	juego.isaac.setVelocityY(-juego.isaac.getCharacterSpeed());
+			        	juego.getIsaac().setVelocityY(-juego.getIsaac().getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_S:
-			        	juego.isaac.setVelocityY(juego.isaac.getCharacterSpeed());
+			        	juego.getIsaac().setVelocityY(juego.getIsaac().getCharacterSpeed());
 			            break;
 			        case KeyEvent.VK_UP:
-			            juego.isaac.shootUp();
+			            juego.getIsaac().shootUp();
 			            break;
 			        case KeyEvent.VK_DOWN:
-			            juego.isaac.shootDown();
+			            juego.getIsaac().shootDown();
 			            break;
 			        case KeyEvent.VK_LEFT:
-			            juego.isaac.shootLeft();
+			            juego.getIsaac().shootLeft();
 			            break;
 			        case KeyEvent.VK_RIGHT:
-			            juego.isaac.shootRight();
+			            juego.getIsaac().shootRight();
 			            break;
 			        case KeyEvent.VK_M:
 			            if (sonido.getClip().isRunning()) {   //Musica que puso Chris
@@ -280,9 +280,9 @@ public class Ventana extends JFrame{
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_D) {
-					juego.isaac.setVelocityX(0);
+					juego.getIsaac().setVelocityX(0);
 		        } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
-		        	juego.isaac.setVelocityY(0);
+		        	juego.getIsaac().setVelocityY(0);
 		        }	
 			}
 			
