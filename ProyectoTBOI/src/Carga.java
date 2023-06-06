@@ -4,17 +4,15 @@ import javax.swing.JPanel;
 public class Carga extends JPanel {
 	public Carga(String ruta) {
 		//Propiedades del panel
-		//setBackground(Color.decode(""));
 		setLayout(null);
-		
-		//Fondo componentes del panel
+
+		//Fondo de inicio
 		JPanel fondo = new JPanel();
-	//	fondo.setBackground(Color.decode(""));
-		fondo.setSize(500, 300);
-		fondo.setLocation(0,150);
+		fondo.setBackground(Color.black);
+		fondo.setSize(1080, 690);
+		fondo.setLocation(0,0);
 		add(fondo);
-		
-		//Agrega imagen a la pantalla de carga
-		Imagen splash = new Imagen(ruta + "", 400,300,fondo);
+				
+		Imagen fondoInicio = new Imagen(ruta+"splash.gif",1080,690,fondo);
 	}
 }

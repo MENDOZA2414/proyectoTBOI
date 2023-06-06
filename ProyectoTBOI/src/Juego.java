@@ -23,6 +23,7 @@ public class Juego extends JPanel {
     private Isaac isaac;
     private int anteriorIsaacX;
     private int anteriorIsaacY;
+    private boolean nuevoJuego = false;
     
     private BufferedImage fondo;
     private List<Objeto> objetos = new ArrayList<>();
@@ -51,24 +52,30 @@ public class Juego extends JPanel {
             	}
         	}
             //Colicion puertas
-            for (Puerta puerta : puertas) {
-            	if(isaac.detectarColision(puerta) && puerta.isAbierta()) {
-            		puerta.setAbierta(false);
+        	 for (int i = 0; i < puertas.size(); i++) {
+         	  
+            	if(isaac.detectarColision(puertas.get(numeroAleatorio-1)) && puertas.get(i).isAbierta()) {
+            		puertas.get(i).setAbierta(false);
             		nuevaSala();
+            	}
+            	if(enemigos.isEmpty()) {
+            		puertas.get(i).setAbierta(true);
+            	}else {
+            		puertas.get(i).setAbierta(false);
             	}
             }
             //Colisiones enemigos
             for (int i = 0; i < enemigos.size(); i++) {
-        	    Enemigo enemigo = enemigos.get(i);
+        	  
         	    //Colision isaac con enemigos
-            	if(isaac.detectarColision(enemigo)) {
+            	if(isaac.detectarColision(enemigos.get(i))) {
             		
             	}
             	//Colision lagrimas con enemigos
-            	if(isaac.colisionLagrima(enemigo)) {
+            	if(isaac.colisionLagrima(enemigos.get(i))) {
             		enemigos.get(i).setVida(enemigos.get(i).getVida()-1);
             		
-            		if(enemigo.getVida() == 0) {
+            		if(enemigos.get(i).getVida() == 0) {
             			enemigos.remove(i);
             		}
             	}
@@ -82,6 +89,7 @@ public class Juego extends JPanel {
         });
         timer.start();
     }
+    
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -97,22 +105,22 @@ public class Juego extends JPanel {
         
         switch (numeroAleatorio) {
         case 1:
-        	puertas.get(0).setAbierta(true);
+        	
             g.drawImage(puertas.get(0).getSprite(), puertas.get(0).getX(), puertas.get(0).getY(), puertas.get(0).getTamaño() + 20, puertas.get(0).getTamaño() - 20, null);
             break;
 
         case 2:    
-        	puertas.get(1).setAbierta(true);
+        	
             g.drawImage(puertas.get(1).getSprite(), puertas.get(1).getX(), puertas.get(1).getY(), puertas.get(1).getTamaño() + 20, puertas.get(1).getTamaño() - 25, null);
             break;
 
         case 3:
-        	puertas.get(2).setAbierta(true);
+        	
             g.drawImage(puertas.get(2).getSprite(), puertas.get(2).getX(), puertas.get(2).getY(), puertas.get(2).getTamaño() - 20, puertas.get(2).getTamaño() + 20, null);
             break;
 
         case 4:
-        	puertas.get(3).setAbierta(true);
+        	
             g.drawImage(puertas.get(3).getSprite(), puertas.get(3).getX(), puertas.get(3).getY(), puertas.get(3).getTamaño() - 20, puertas.get(3).getTamaño() + 20, null);
             break;
         }
@@ -292,7 +300,7 @@ public class Juego extends JPanel {
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
 
-            enemigos.add(new Enemigo("resources/mosca.png", "Mosca", 32, 28, x, y, 10, 1));
+            enemigos.add(new Enemigo("resources/mosca.png", "Mosca", 34, 26, x, y, 10, 1));
         }
     }
     
@@ -368,7 +376,18 @@ public class Juego extends JPanel {
 
         isaac.lagrimas.removeIf(lagrima -> lagrima.getX() < 85 || lagrima.getX() > WIDTH - 110 || lagrima.getY() < 85 || lagrima.getY() > HEIGHT - 110);
     }
-
+	
+	public void nuevoJuego() {
+		isaac.setX(WIDTH / 2);
+		isaac.setY(HEIGHT / 2);
+		isaac.setVidas(6);
+		eliminarObjetos();
+	    eliminarEnemigos();
+		generarFondo("resources/instrucciones.png"); 
+        generarPuertas();
+        nuevoJuego = true;
+	}
+	
 	public Isaac getIsaac() {
 		return isaac;
 	}
@@ -388,4 +407,14 @@ public class Juego extends JPanel {
 	public void setAnteriorIsaacY(int anteriorIsaacY) {
 		this.anteriorIsaacY = anteriorIsaacY;
 	}
+
+	public boolean isNuevoJuego() {
+		return nuevoJuego;
+	}
+
+	public void setNuevoJuego(boolean nuevoJuego) {
+		this.nuevoJuego = nuevoJuego;
+	}
+	
+	
 }

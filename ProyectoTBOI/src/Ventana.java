@@ -4,6 +4,8 @@
 //ALMA DELIA VARGAS GONZALEZ
 //CHRISTIAN RODRIGUEZ MORENO
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedReader;
@@ -35,11 +37,12 @@ public class Ventana extends JFrame{
 	private Menu menu = new Menu(ruta);
 	private Juego juego = new Juego();
 	private GameOver gameover = new GameOver(ruta);
-	private Sonido sonido = new Sonido();
+	private Sonido sonido = new Sonido("IntroSong");
 
 	public String rutaTxt = ruta+"scores.txt"; // <---------------------------------------
     public Score score;// <---------------------------------------
     public ListaScores listaScores;//<--------
+    
 	public Ventana() {
 		//Propiedades de la ventana
 		super("The binding of Isaac");
@@ -57,16 +60,23 @@ public class Ventana extends JFrame{
 	    setLocationRelativeTo(null);
 	    setVisible(true);
 	    setResizable(false);
-		//pantallaCarga();
 	    
 	    Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if(juego.getIsaac().getVidas() == 0) {
-                	remove(juego);
+                	remove(juego);         
                 	add(gameover);
+                	if(juego.isNuevoJuego()) {
+                		gameover.requestFocusInWindow();
+                	}else {
+                		keysGameOver();
+                	}
+                	
+                	juego.nuevoJuego();
                     actualizar();
+                    //timer.cancel();
                 }
             }
         }, 0, 100);
@@ -132,7 +142,6 @@ public class Ventana extends JFrame{
 				
 				char keyCode = e.getKeyChar();
 				if (keyCode == KeyEvent.VK_SPACE) {
-                    inicio.setFocusable(false);
                     remove(inicio);
                     add(menu);
                     menu.requestFocusInWindow(); // Establece el foco en el panel de menú
@@ -157,10 +166,10 @@ public class Ventana extends JFrame{
 		inicio.setFocusable(true);
         inicio.requestFocusInWindow();
 	}
-
+	
 	public void keysMenu(){
 		menu.addKeyListener(new KeyListener() {
-			int opcion = 1;
+		int opcion = 1;
 
 			@Override
 			public void keyPressed(KeyEvent  e) {
@@ -194,16 +203,27 @@ public class Ventana extends JFrame{
 				if (keyCode == 10 || keyCode == 32) { // Realizar algo cuando se presiona la tecla enter
 					if(opcion == 1) {
 						remove(menu);
-						
-						add(juego);
-						juego.requestFocusInWindow(); // Establece el foco en el panel de juego
-						keysJuego();
+						pantallaCarga();
 		                actualizar();
 					}
+					
 					if(opcion==2) {
 						remove(menu);
 						add(panelLeaderBoard);
-						 actualizar();
+						panelLeaderBoard.getBtnMenu().addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								remove(panelLeaderBoard);
+								add(menu);
+			                    menu.requestFocusInWindow(); // Establece el foco en el panel de menú  							
+								menu.setMenu1();
+								actualizar();
+								opcion =1;
+							}
+							
+						});
+						actualizar();
 					}
 					if(opcion == 3) {
 						System.exit(0);
@@ -242,9 +262,11 @@ public class Ventana extends JFrame{
 			}
 
 			public void keyPressed(KeyEvent e) {
-			    int keyCode = e.getKeyCode();			    	
+			    int keyCode = e.getKeyCode();	
+			    
 		    	switch (keyCode) {
 		    	case KeyEvent.VK_A:
+		    		System.out.println("A nuevo key del juego");
 		    		juego.getIsaac().setVelocityX(-juego.getIsaac().getCharacterSpeed());
 		    		break;
 		    	case KeyEvent.VK_D:
@@ -299,25 +321,67 @@ public class Ventana extends JFrame{
         juego.requestFocusInWindow();
 	}
 	
+	public void keysGameOver(){
+		System.out.println("keyGameover");
+		gameover.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent  e) {
+				
+				char keyCode = e.getKeyChar();
+				if (keyCode == KeyEvent.VK_SPACE) {
+					System.out.println("space");
+                    remove(gameover);  
+                    add(menu);
+                    contador=0;
+                    sonido.cambiarRuta("IntroSong");
+                    menu.requestFocusInWindow(); // Establece el foco en el panel de menú  
+                    
+                    actualizar();
+                }
+			}
+
+			@Override
+			public void keyReleased(KeyEvent  e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent  e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		gameover.setFocusable(true);
+		gameover.requestFocusInWindow();
+	}
 	
 	
 	//Metodo para la pantalla de carga
 	public void pantallaCarga() {
 		Carga carga = new Carga(ruta);
 	    add(carga);
+	    sonido.cambiarRuta("newRun");
 	    Tiempo(carga);
 	    actualizar();
 	}
 	
-	//Hace invisible el panel cuando pasan 3 segundos	
+	//Hace invisible el panel cuando pasan 5 segundos	
 	public void Tiempo(JPanel panelCarga) {
 		Timer timer = new Timer();
 		TimerTask tarea = new TimerTask() {
 			@Override
 			public void run() {
 				contador++;
-				if(contador == 3) {
-					
+				if(contador == 5) {
+					sonido.cambiarRuta("MainSong");
+					add(juego);
+					juego.requestFocusInWindow(); // Establece el foco en el panel de juego
+					if(!juego.isNuevoJuego()) {
+						keysJuego();
+					}
 					panelCarga.setVisible(false);
 					timer.cancel();	
 				}
@@ -326,7 +390,24 @@ public class Ventana extends JFrame{
 		};
 		timer.schedule(tarea,0,1000);
 	}
-
+	
+	/*public void nuevoTiempo() {
+		Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(juego.getIsaac().getVidas() == 0) {
+                	remove(juego);         
+                	add(gameover);
+                	keysGameOver();
+                	juego.nuevoJuego();
+                    actualizar();
+                    timer.cancel();
+                }
+            }
+        }, 0, 100);
+	}*/
+	
 	//Metodo para actualizar la ventana
 	public void actualizar(){
 		repaint();

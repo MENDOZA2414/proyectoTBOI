@@ -81,4 +81,7 @@ public class PanelLeaderBoard extends JPanel {
 		repaint();
 		revalidate();
 	}
+	public JButton getBtnMenu() {
+		return btnMenu;
+	}
 }
