@@ -105,22 +105,42 @@ public class Juego extends JPanel {
         
         switch (numeroAleatorio) {
         case 1:
-        	
+            if(enemigos.isEmpty()) {
+                puertas.get(0).setSpriteAbierto(0);
+            }
+            else{
+                puertas.get(0).setSpriteCerrado();
+            }
             g.drawImage(puertas.get(0).getSprite(), puertas.get(0).getX(), puertas.get(0).getY(), puertas.get(0).getTamaño() + 20, puertas.get(0).getTamaño() - 20, null);
             break;
 
         case 2:    
-        	
+            if(enemigos.isEmpty()) {
+                puertas.get(1).setSpriteAbierto(1);
+            }
+            else{
+                puertas.get(1).setSpriteCerrado();
+            }
             g.drawImage(puertas.get(1).getSprite(), puertas.get(1).getX(), puertas.get(1).getY(), puertas.get(1).getTamaño() + 20, puertas.get(1).getTamaño() - 25, null);
             break;
 
         case 3:
-        	
+            if(enemigos.isEmpty()) {
+                puertas.get(2).setSpriteAbierto(2);
+            }
+            else{
+                puertas.get(2).setSpriteCerrado();
+            }
             g.drawImage(puertas.get(2).getSprite(), puertas.get(2).getX(), puertas.get(2).getY(), puertas.get(2).getTamaño() - 20, puertas.get(2).getTamaño() + 20, null);
             break;
 
         case 4:
-        	
+            if(enemigos.isEmpty()) {
+                puertas.get(3).setSpriteAbierto(3);
+            }
+            else{
+                puertas.get(3).setSpriteCerrado();
+            }
             g.drawImage(puertas.get(3).getSprite(), puertas.get(3).getX(), puertas.get(3).getY(), puertas.get(3).getTamaño() - 20, puertas.get(3).getTamaño() + 20, null);
             break;
         }
@@ -241,25 +261,25 @@ public class Juego extends JPanel {
         // Puerta arriba
         int puertaArribaX = (WIDTH - puertaAncho) / 2;
         int puertaArribaY = 40;
-        Puerta puertaArriba = new Puerta("resources/puertaArriba.png", puertaAncho, puertaArribaX, puertaArribaY, false);
+        Puerta puertaArriba = new Puerta("resources/puertaCerradaArriba.png", puertaAncho, puertaArribaX, puertaArribaY, false);
         puertas.add(puertaArriba);
    
         // Puerta abajo    
         int puertaAbajoX = (WIDTH - puertaAncho) / 2;
         int puertaAbajoY = HEIGHT - puertaAlto + 245;
-        Puerta puertaAbajo = new Puerta("resources/puertaAbajo.png", puertaAncho, puertaAbajoX, puertaAbajoY, false);
+        Puerta puertaAbajo = new Puerta("resources/puertaCerradaAbajo.png", puertaAncho, puertaAbajoX, puertaAbajoY, false);
         puertas.add(puertaAbajo);   
 
         // Puerta izquierda
         int puertaIzquierdaX = 45;
         int puertaIzquierdaY = (HEIGHT - puertaAncho - 20) / 2;
-        Puerta puertaIzquierda = new Puerta("resources/puertaIzquierda.png", puertaAncho, puertaIzquierdaX, puertaIzquierdaY, false);
+        Puerta puertaIzquierda = new Puerta("resources/puertaCerradaIzquierda.png", puertaAncho, puertaIzquierdaX, puertaIzquierdaY, false);
         puertas.add(puertaIzquierda);
 
         // Puerta derecha
         int puertaDerechaX = WIDTH - puertaAncho - 25;
         int puertaDerechaY = (HEIGHT - puertaAncho - 20) / 2;
-        Puerta puertaDerecha = new Puerta("resources/puertaDerecha.png", puertaAncho, puertaDerechaX, puertaDerechaY, false);
+        Puerta puertaDerecha = new Puerta("resources/puertaCerradaDerecha.png", puertaAncho, puertaDerechaX, puertaDerechaY, false);
         puertas.add(puertaDerecha);
     }
 
@@ -384,7 +404,6 @@ public class Juego extends JPanel {
 		eliminarObjetos();
 	    eliminarEnemigos();
 		generarFondo("resources/instrucciones.png"); 
-        generarPuertas();
         nuevoJuego = true;
 	}
 	

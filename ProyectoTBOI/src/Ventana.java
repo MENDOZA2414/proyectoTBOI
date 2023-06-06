@@ -266,7 +266,7 @@ public class Ventana extends JFrame{
 			    
 		    	switch (keyCode) {
 		    	case KeyEvent.VK_A:
-		    		System.out.println("A nuevo key del juego");
+		    		
 		    		juego.getIsaac().setVelocityX(-juego.getIsaac().getCharacterSpeed());
 		    		break;
 		    	case KeyEvent.VK_D:

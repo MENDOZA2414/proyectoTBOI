@@ -42,6 +42,7 @@ public class Objeto {
     public void setSprite(BufferedImage sprite) {
 		this.sprite = sprite;
 	}
+   
 
 	public BufferedImage getSprite() {
 		return sprite;
