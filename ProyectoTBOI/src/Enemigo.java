@@ -54,22 +54,18 @@ public class Enemigo {
 		return alto;
 	}
 
-	public void mover(int panelAncho, int panelAlto) {
-
-        Random random = new Random();
+	public void mover() {
+		
+		Random random = new Random();
         int cambioX = random.nextInt(3) - 1; //Valores aleatorios entre -1 y 1
         int cambioY = random.nextInt(3) - 1; //Valores aleatorios entre -1 y 1
 
         int nuevaX = x + velocidad * cambioX;
         int nuevaY = y + velocidad * cambioY;
-
-        // Comprueba si las nuevas coordenadas están dentro de los límites del panel
-        if (nuevaX >= 0 && nuevaX <= panelAncho - getSprite().getWidth()) {
-            x = nuevaX;
-        }
         
-        if (nuevaY >= 0 && nuevaY <= panelAlto - getSprite().getHeight()) {
-            y = nuevaY;
+        if(!(nuevaX < 80 || nuevaX > Juego.WIDTH - 110|| nuevaY < 80 || nuevaY > Juego.HEIGHT - 110)) {
+            x = nuevaX;
+            y = nuevaY;   
         }
     }
 

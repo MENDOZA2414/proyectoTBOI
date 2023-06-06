@@ -83,7 +83,7 @@ public class Juego extends JPanel {
             //Movimiento enemigos
             for (Enemigo enemigo : enemigos) {
             	if(enemigo.getNombre() == "Mosca") {
-            		enemigo.mover(700, 600);            		
+            		enemigo.mover();            		
             	}
             }
         });
@@ -300,7 +300,7 @@ public class Juego extends JPanel {
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
 
-            enemigos.add(new Enemigo("resources/mosca.png", "Mosca", 34, 26, x, y, 10, 1));
+            enemigos.add(new Enemigo("resources/mosca.png", "Mosca", 34, 26, x, y, 6, 1));
         }
     }
     
