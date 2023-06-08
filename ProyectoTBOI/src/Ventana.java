@@ -65,7 +65,7 @@ public class Ventana extends JFrame{
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(juego.getIsaac().getVidas() == 0) {
+                if(juego.getIsaac().getLife() == 0) {
                 	remove(juego);         
                 	add(gameover);
                 	if(juego.isNuevoJuego()) {
@@ -267,16 +267,16 @@ public class Ventana extends JFrame{
 		    	switch (keyCode) {
 		    	case KeyEvent.VK_A:
 		    		
-		    		juego.getIsaac().setVelocityX(-juego.getIsaac().getCharacterSpeed());
+		    		juego.getIsaac().setVelocityX(-juego.getIsaac().getSpeed());
 		    		break;
 		    	case KeyEvent.VK_D:
-		    		juego.getIsaac().setVelocityX(juego.getIsaac().getCharacterSpeed());
+		    		juego.getIsaac().setVelocityX(juego.getIsaac().getSpeed());
 		    		break;
 		    	case KeyEvent.VK_W:
-		    		juego.getIsaac().setVelocityY(-juego.getIsaac().getCharacterSpeed());
+		    		juego.getIsaac().setVelocityY(-juego.getIsaac().getSpeed());
 		    		break;
 		    	case KeyEvent.VK_S:
-		    		juego.getIsaac().setVelocityY(juego.getIsaac().getCharacterSpeed());
+		    		juego.getIsaac().setVelocityY(juego.getIsaac().getSpeed());
 		    		break;
 		    	case KeyEvent.VK_UP:
 		    		juego.getIsaac().shootUp();

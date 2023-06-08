@@ -1,47 +1,24 @@
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.Timer;
 
-import javax.imageio.ImageIO;
+public class Isaac extends Entidad{
 
-public class Isaac {
-
-    public static final int CHARACTER_SPEED = 8;
-    private static final int CHARACTER_SIZE = 72;
-    private static final int BALL_SPEED = 5;
-    private static final int SHOOT_DELAY = 450; // 1000 = 1 segundo
-
-    private int x;
-    private int y;
     private int velocityX;
     private int velocityY;
-
-    private BufferedImage isaac;
-    private BufferedImage tear;
+    private boolean invencible;
 
     public List<Lagrima> lagrimas;
     public long lastShootTime;  // Tiempo del último disparo
-    private int vidas = 6;
-    private boolean invencible = false;
 
-    public Isaac(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Isaac(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canShoot, int tearSpeed, int shootDelay, int life, int x, int y) {
+        super(spritePath, tearPath, nombre, ancho, alto, speed, canShoot, tearSpeed, shootDelay, life, x, y);
         this.velocityX = 0;
         this.velocityY = 0;
-
-        try {
-            isaac = ImageIO.read(new File("resources/isaacola.png"));
-            tear = ImageIO.read(new File("resources/normaltear.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        this.invencible = false;
+        
         lagrimas = new ArrayList<>();
         lastShootTime = 0;
     }
@@ -49,7 +26,7 @@ public class Isaac {
     public void paint(Graphics g) {
 //    	g.setColor(Color.red);
 //        g.fillRect(200, 200, CHARACTER_SIZE, CHARACTER_SIZE);
-        g.drawImage(isaac, x - CHARACTER_SIZE / 2, y - CHARACTER_SIZE / 2, CHARACTER_SIZE, CHARACTER_SIZE, null);
+        g.drawImage(getSprite(), getX() - getAncho() / 2, getY() - getAlto() / 2, getAncho(), getAlto(), null);
 
         for (Lagrima lagrima : lagrimas) {
             lagrima.paint(g);
@@ -57,8 +34,8 @@ public class Isaac {
     }
 
     public void update(int velocityX, int velocityY) {
-        x += velocityX;
-        y += velocityY;
+    	setX(getX()+velocityX);
+    	setY(getY()+velocityY);
 
         for (Lagrima lagrima : lagrimas) {
             lagrima.update();
@@ -69,8 +46,8 @@ public class Isaac {
 
     public void shootUp() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastShootTime >= SHOOT_DELAY) {
-            Lagrima lagrima = new Lagrima(x, y, 0, -BALL_SPEED);
+        if (currentTime - lastShootTime >= getShootDelay()) {
+            Lagrima lagrima = new Lagrima(getX(), getY(), 0, -getTearSpeed());
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
         }
@@ -78,8 +55,8 @@ public class Isaac {
 
     public void shootDown() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastShootTime >= SHOOT_DELAY) {
-            Lagrima lagrima = new Lagrima(x, y, 0, BALL_SPEED);
+        if (currentTime - lastShootTime >= getShootDelay()) {
+            Lagrima lagrima = new Lagrima(getX(), getY(), 0, getTearSpeed());
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
         }
@@ -87,8 +64,8 @@ public class Isaac {
 
     public void shootLeft() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastShootTime >= SHOOT_DELAY) {
-            Lagrima lagrima = new Lagrima(x, y, -BALL_SPEED, 0);
+        if (currentTime - lastShootTime >= getShootDelay()) {
+            Lagrima lagrima = new Lagrima(getX(), getY(), -getTearSpeed(), 0);
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
         }
@@ -96,8 +73,8 @@ public class Isaac {
 
     public void shootRight() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastShootTime >= SHOOT_DELAY) {
-            Lagrima lagrima = new Lagrima(x, y, BALL_SPEED, 0);
+        if (currentTime - lastShootTime >= getShootDelay()) {
+            Lagrima lagrima = new Lagrima(getX(), getY(), getTearSpeed(), 0);
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
         }
@@ -116,10 +93,10 @@ public class Isaac {
         int x1 = objeto.getX();
         int y1 = objeto.getY();
 
-        int ancho2 = this.CHARACTER_SIZE;
-        int alto2 = this.CHARACTER_SIZE;
-        int x2 = this.getX();
-        int y2 = this.getY();
+        int ancho2 = getAncho();
+        int alto2 = getAlto();
+        int x2 = getX();
+        int y2 = getY();
 
         boolean colisionIzquierda = x1 + ancho1 > x2 && x1 < x2;
         boolean colisionDerecha = x1 < x2 + ancho2 && x1 + ancho1 > x2;
@@ -142,10 +119,10 @@ public class Isaac {
     		int x1 = enemigo.getX();
     		int y1 = enemigo.getY();
     		
-    		int ancho2 = this.CHARACTER_SIZE;
-    		int alto2 = this.CHARACTER_SIZE;
-    		int x2 = this.getX();
-    		int y2 = this.getY();
+    		int ancho2 = getAncho();
+    		int alto2 = getAlto();
+    		int x2 = getX();
+    		int y2 = getY();
     		
     		boolean colisionIzquierda = x1 + ancho1 > x2 && x1 < x2;
     		boolean colisionDerecha = x1 < x2 + ancho2 && x1 + ancho1 > x2;
@@ -153,7 +130,7 @@ public class Isaac {
     		boolean colisionAbajo = y1 < y2 + alto2 - alto2/2 && y1 + alto1 > y2;
     		
     		if (colisionIzquierda && colisionDerecha && colisionArriba && colisionAbajo) {
-    			setVidas(getVidas()-1);
+    			setLife(getLife()-1);
     			setInvencible(true);
 			 	Timer timer = new Timer();
 		        timer.schedule(new TimerTask() {
@@ -230,26 +207,6 @@ public class Isaac {
         return colision;
     }
 
-	public BufferedImage getFrame() {
-		return isaac;
-	}
-
-	public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public int getVelocityX() {
         return velocityX;
     }
@@ -265,20 +222,4 @@ public class Isaac {
     public void setVelocityY(int velocityY) {
         this.velocityY = velocityY;
     }
-
-	public static int getCharacterSize() {
-		return CHARACTER_SIZE;
-	}
-
-	public int getCharacterSpeed(){
-        return CHARACTER_SPEED;
-    }
-
-	public int getVidas() {
-		return vidas;
-	}
-
-	public void setVidas(int vidas) {
-		this.vidas = vidas;
-	}
 }

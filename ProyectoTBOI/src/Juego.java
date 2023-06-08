@@ -33,7 +33,7 @@ public class Juego extends JPanel {
     private Objeto corazon = new Objeto("resources/corazon.png", 30);
     
     public Juego() {
-        isaac = new Isaac(WIDTH / 2, HEIGHT / 2);
+        isaac = new Isaac("resources/isaacola.png", "resources/normaltear.png", "isaac", 72, 72, 8, true, 5, 450, 6, WIDTH / 2, HEIGHT / 2);
         isaac.lastShootTime = 0;
         
         generarFondo("resources/instrucciones.png");
@@ -73,9 +73,9 @@ public class Juego extends JPanel {
             	}
             	//Colision lagrimas con enemigos
             	if(isaac.colisionLagrima(enemigos.get(i))) {
-            		enemigos.get(i).setVida(enemigos.get(i).getVida()-1);
+            		enemigos.get(i).setLife(enemigos.get(i).getLife()-1);
             		
-            		if(enemigos.get(i).getVida() == 0) {
+            		if(enemigos.get(i).getLife() == 0) {
             			enemigos.remove(i);
             		}
             	}
@@ -156,7 +156,7 @@ public class Juego extends JPanel {
         
         //VIDAS
         g.setColor(Color.RED);
-        for (int i = 0; i < isaac.getVidas(); i++) {
+        for (int i = 0; i < isaac.getLife(); i++) {
             int x = 10 + (i * (20 + 5));
             g.drawImage(corazon.getSprite(), x, 10, corazon.getTamaño(), corazon.getTamaño(), null);
         }
@@ -306,7 +306,7 @@ public class Juego extends JPanel {
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
 
-            enemigos.add(new Enemigo("resources/Horf.png", "Horf", 55, 55, x, y, 2, 4));
+            enemigos.add(new Enemigo("resources/Horf.png", "resources/normaltear.png", "Horf", 55, 55, 2, true, 5, 450, 4, x, y));
         }
         //Generacion de moscas
         int numeroMosca = random.nextInt(4) + 1;
@@ -319,8 +319,7 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-
-            enemigos.add(new Enemigo("resources/mosca.png", "Mosca", 34, 26, x, y, 6, 1));
+            enemigos.add(new Enemigo("resources/mosca.png", "resources/normaltear.png", "Mosca", 34, 26, 6, false, 0, 0, 1, x, y));
         }
     }
     
@@ -400,7 +399,7 @@ public class Juego extends JPanel {
 	public void nuevoJuego() {
 		isaac.setX(WIDTH / 2);
 		isaac.setY(HEIGHT / 2);
-		isaac.setVidas(6);
+		isaac.setLife(6);
 		eliminarObjetos();
 	    eliminarEnemigos();
 		generarFondo("resources/instrucciones.png"); 
@@ -434,6 +433,4 @@ public class Juego extends JPanel {
 	public void setNuevoJuego(boolean nuevoJuego) {
 		this.nuevoJuego = nuevoJuego;
 	}
-	
-	
 }
