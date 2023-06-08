@@ -24,7 +24,7 @@ public class Sonido {
 
             // ajustar volumen audio
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volume = 0.06f; // volumen
+            volume = 0.2f; // volumen
             float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
             gainControl.setValue(dB);
 

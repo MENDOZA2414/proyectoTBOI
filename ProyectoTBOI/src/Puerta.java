@@ -1,14 +1,13 @@
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
 public class Puerta extends Objeto {
     private boolean abierta;
     private String rutaOriginal;
 
-    public Puerta(String spritePath, int tamaño, int x, int y, boolean abierta) {
-        super(spritePath, tamaño, x, y);
+    public Puerta(String spritePath, int ancho, int alto, int x, int y, boolean abierta) {
+        super(spritePath, ancho, alto, x, y);
         rutaOriginal=spritePath;
         this.abierta = abierta;
     }
@@ -62,7 +61,6 @@ public class Puerta extends Objeto {
             e.printStackTrace();
         }
             break;
-        }
-        
+        }  
 	}
 }
