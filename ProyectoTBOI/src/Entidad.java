@@ -1,6 +1,8 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.imageio.ImageIO;
 
 public class Entidad {
@@ -13,17 +15,21 @@ public class Entidad {
 	private int alto;
 	
 	//Atributos generales
-	boolean canShoot;	
+	private boolean canShoot;	
     private int speed;
+    private boolean canMove;
+    private int tearSize;
     private int tearSpeed;
-    private int shootDelay; // 1000 = 1 segundo
+    private int shootDelay;
     private int life;
+    private boolean invencible;
+    private int immunityTime;
     
 	//Coordenadas
     private int x;
     private int y;
     
-    public Entidad(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canShoot, int tearSpeed, int shootDelay, int life, int x, int y) {
+    public Entidad(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, int shootDelay, int life, int immunityTime, int x, int y) {
     	
         try {
             this.sprite = ImageIO.read(new File(spritePath));
@@ -38,14 +44,33 @@ public class Entidad {
     	
     	this.canShoot = canShoot;
     	this.speed = speed;
+    	this.canMove = canMove;
+    	this.tearSize = tearSize;
     	this.tearSpeed = tearSpeed;
     	this.shootDelay = shootDelay;
     	this.life = life;
+    	this.invencible = false;
+    	this.immunityTime = immunityTime;
     	
         this.x = x;
         this.y = y;
     }
 
+    public void recibeDaño() {
+    	setLife(getLife()-1);
+    }
+    
+    public void activarInmunidad(int segundos) {
+        setInvencible(true);
+        Timer invencibleTimer = new Timer();
+        invencibleTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setInvencible(false);
+            }
+        }, segundos*1000); // 1000 milisegundos = 1 segundos
+    }
+    
 	public BufferedImage getSprite() {
 		return sprite;
 	}
@@ -102,6 +127,22 @@ public class Entidad {
 		this.speed = speed;
 	}
 
+	public boolean isCanMove() {
+		return canMove;
+	}
+
+	public void setCanMove(boolean canMove) {
+		this.canMove = canMove;
+	}
+
+	public int getTearSize() {
+		return tearSize;
+	}
+
+	public void setTearSize(int tearSize) {
+		this.tearSize = tearSize;
+	}
+
 	public int getTearSpeed() {
 		return tearSpeed;
 	}
@@ -124,6 +165,22 @@ public class Entidad {
 
 	public void setLife(int life) {
 		this.life = life;
+	}
+
+	public boolean isInvencible() {
+		return invencible;
+	}
+
+	public void setInvencible(boolean invencible) {
+		this.invencible = invencible;
+	}
+
+	public int getImmunityTime() {
+		return immunityTime;
+	}
+
+	public void setImmunityTime(int immunityTime) {
+		this.immunityTime = immunityTime;
 	}
 
 	public int getX() {

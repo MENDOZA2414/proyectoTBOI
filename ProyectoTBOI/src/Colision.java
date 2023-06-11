@@ -49,11 +49,39 @@ public class Colision {
         return colision();
     }
 	
+	public boolean detectar(Enemigo enemigo, Objeto objeto) {
+		x1 = objeto.getX();
+		y1 = objeto.getY();
+        ancho1 = objeto.getAncho();
+        alto1 = objeto.getAlto();
+
+        x2 = enemigo.getX();
+        y2 = enemigo.getY();
+        ancho2 = enemigo.getAncho();
+        alto2 = enemigo.getAlto();
+        
+        return colision();
+    }
+	
 	public boolean detectar(Jugador jugador, Enemigo enemigo) {
 		x1 = enemigo.getX();
 		y1 = enemigo.getY();
 		ancho1 = enemigo.getAncho();
 		alto1 = enemigo.getAlto();
+		
+		x2 = jugador.getX();
+		y2 = jugador.getY();
+		ancho2 = jugador.getAncho();
+		alto2 = jugador.getAlto();
+		
+		return colision();
+    }
+	
+	public boolean detectar(Jugador jugador, Lagrima lagrima) {
+		x1 = lagrima.getX();
+		y1 = lagrima.getY();
+		ancho1 = lagrima.getTamaño();
+		alto1 = lagrima.getTamaño();
 		
 		x2 = jugador.getX();
 		y2 = jugador.getY();
