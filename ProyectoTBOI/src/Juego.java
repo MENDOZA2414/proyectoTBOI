@@ -13,7 +13,7 @@ import java.util.Random;
 public class Juego extends JPanel {
 
 	//Variables generales juego (DATO: no son para power ups, son de default)
-	private int tiempoImunidad = 1; //Tiempo que pasa antes de recibir otro fregazo
+	private int tiempoImunidad = 2; //Tiempo que pasa antes de recibir otro fregazo
     private int velocidad = 6; //Velocidad del isaac
     private boolean puedeMoverse = true; //Determina si isaac puede o no moverse
     private boolean dispara = true; //Determina si isaac puede o no disparar
@@ -41,6 +41,17 @@ public class Juego extends JPanel {
     private int velocidaLagrimasM = 0;
     private int frecuenciaLagrimasM = 0;
     private int vidaM = 1;
+    
+    //Variables mosca
+	private int tiempoImunidadS = 0;
+    private int velocidadS = 3;
+    private boolean puedeMoverseS = true; 
+    private boolean disparaS = false;
+    private int tamañoLagrimasS = 0;
+    private int velocidaLagrimasS = 0;
+    private int frecuenciaLagrimasS = 0;
+    private int vidaS = 6;
+    
     //---------------------------------------------------------------------------------------------
     
     public static final int WIDTH = 1080;
@@ -60,6 +71,14 @@ public class Juego extends JPanel {
     private List<Enemigo> enemigos = new ArrayList<>();
     private List<Puerta> puertas = new ArrayList<>();
     
+  //Animacion isaac
+  	private String[] quieto = {"resources/skinny.png","resources/skinny.png","resources/skinny.png"};
+  	private String[] animacion = quieto;
+  	private String[] arriba = {"resources/skinnyArr1.png","resources/skinnyArr2.png","resources/skinnyArr3.png"};
+  	private String[] abajo = {"resources/skinnyAbj1.png","resources/skinnyAbj2.png","resources/skinnyAbj3.png"};
+  	private String[] izquierda = {"resources/skinnyIzq1.png","resources/skinnyIzq2.png","resources/skinnyIzq3.png"};
+  	private String[] derecha = {"resources/skinnyDer1.png","resources/skinnyDer2.png","resources/skinnyDer3.png"};
+
     private Objeto corazon = new Objeto("resources/corazon.png", 30, 30, 0, 0);
     private Colision colision = new Colision();
     
@@ -75,9 +94,32 @@ public class Juego extends JPanel {
             colisionesObjetos();
             colisionesEnemigos();
             
-            //Movimiento enemigos
+          //Movimiento enemigos
             for (Enemigo enemigo : enemigos) {
-            	enemigo.mover();
+            	if(enemigo.getNombre() == "Skinny") {
+            		int posXAnterior = enemigo.getX();
+                    int posYAnterior = enemigo.getY();
+
+                    enemigo.moverHaciaIsaacConEvasion( isaac.getX(), isaac.getY(), objetos);
+                    // Determinar dirección horizontal
+                    int deltaX = enemigo.getX() - posXAnterior;
+                    if (deltaX > 0) {
+                        animacion = derecha;
+                    } else if (deltaX < 0) {
+                        animacion = izquierda;
+                    }
+
+                    // Determinar dirección vertical
+                    int deltaY = enemigo.getY() - posYAnterior;
+                    if (deltaY > 0) {
+                        animacion = abajo;
+                    } else if (deltaY < 0) {
+                        animacion = arriba;
+                    }
+            	}
+            	else {
+                	enemigo.mover();
+            	}
             }
         });
         timer.start();
@@ -88,6 +130,23 @@ public class Juego extends JPanel {
         	}
         });
         disparosEnemigo.start();
+        
+        final int[] i = {0}; // Declarar la variable i como un array final
+
+        Timer movimientoEnemigo = new Timer(250, e -> {
+            for (Enemigo enemigo : enemigos) {
+                if (enemigo.getNombre().equals("Skinny")) {
+                    
+                    // Actualizar la animación del enemigo
+                    enemigo.setSprite(animacion[i[0]]);
+                    i[0]++;
+                    if (i[0] >= animacion.length) {
+                        i[0] = 0;
+                    }
+                }
+            }
+        });
+        movimientoEnemigo.start();
     }
     
     public void colisionesObjetos() {
@@ -106,12 +165,14 @@ public class Juego extends JPanel {
         				j--;
         				break;
         			}
-        			if (colision.detectar(isaac, enemigo.getLagrimas().get(j))) {
-        				enemigo.getLagrimas().remove(j);
-        				isaac.recibeDaño();
-                		isaac.activarInmunidad(tiempoImunidad);
-        				j--;
-        				break;
+        			if(!isaac.isInvencible()){
+	        			if (colision.detectar(isaac, enemigo.getLagrimas().get(j))) {
+	        				enemigo.getLagrimas().remove(j);
+	        				isaac.recibeDaño();
+	                		isaac.activarInmunidad(tiempoImunidad);
+	        				j--;
+	        				break;
+	        			}
         			}
         		}
     	    }
@@ -386,7 +447,7 @@ public class Juego extends JPanel {
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
 
-            enemigos.add(new Enemigo("resources/Horf.png", "resources/normaltear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, x, y));
+            enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, x, y));
         }
         //Generacion de moscas
         int numeroMosca = random.nextInt(4) + 1;
@@ -399,7 +460,21 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/mosca.png", "resources/normaltear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, tamañoLagrimasM, velocidaLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, x, y));
+            enemigos.add(new Enemigo("resources/mosca.png", "resources/redtear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, tamañoLagrimasM, velocidaLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, x, y));
+        }
+      //Generacion de Skinny
+        int numeroSkinny = random.nextInt(2); // Genera 0 o 1
+
+        for (int i = 0; i < numeroSkinny; i++) {
+            int x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
+            int y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
+
+            // Verificar colisión con otros objetos generados
+            while (verificarColisionConObjetos(x, y, objetos) || verificarColisionConAdyacentes(x, y, objetos)) {
+                x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
+                y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
+            }
+            enemigos.add(new Enemigo("resources/skinny.png", "resources/redtear.png", "Skinny", 63, 80, velocidadS, puedeMoverseS, disparaS, tamañoLagrimasS, velocidaLagrimasS, frecuenciaLagrimasS, vidaS, tiempoImunidadS, x, y));
         }
     }
     
