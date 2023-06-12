@@ -75,8 +75,13 @@ public class Entidad {
 		return sprite;
 	}
 
-	public void setSprite(BufferedImage sprite) {
-		this.sprite = sprite;
+	public void setSprite(String spritePath) {
+		try {
+			this.sprite = ImageIO.read(new File(spritePath));
+	            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 
 	public BufferedImage getTearSprite() {
@@ -198,5 +203,4 @@ public class Entidad {
 	public void setY(int y) {
 		this.y = y;
 	}
-    
 }

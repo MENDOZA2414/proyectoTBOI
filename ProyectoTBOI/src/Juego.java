@@ -14,7 +14,7 @@ public class Juego extends JPanel {
 
 	//Variables generales juego (DATO: no son para power ups, son de default)
 	private int tiempoImunidad = 1; //Tiempo que pasa antes de recibir otro fregazo
-    private int velocidad = 8; //Velocidad del isaac
+    private int velocidad = 6; //Velocidad del isaac
     private boolean puedeMoverse = true; //Determina si isaac puede o no moverse
     private boolean dispara = true; //Determina si isaac puede o no disparar
     private int tamañoLagrimas = 30; //Tamaño de las lagrimas
@@ -24,7 +24,7 @@ public class Juego extends JPanel {
     
     //Variables Horf
 	private int tiempoImunidadH = 0;
-    private int velocidadH = 8;
+    private int velocidadH = 6;
     private boolean puedeMoverseH = false;
     private boolean disparaH = true;
     private int tamañoLagrimasH = 30;
@@ -64,7 +64,7 @@ public class Juego extends JPanel {
     private Colision colision = new Colision();
     
     public Juego() {
-        isaac = new Jugador("resources/isaacola.png", "resources/normaltear.png", "isaac", 72, 72, velocidad, puedeMoverse, dispara, tamañoLagrimas, velocidaLagrimas, frecuenciaLagrimas, vida, tiempoImunidad, WIDTH / 2, HEIGHT / 2);
+        isaac = new Jugador("resources/isaac.png", "resources/normaltear.png", "isaac", 63, 80, velocidad, puedeMoverse, dispara, tamañoLagrimas, velocidaLagrimas, frecuenciaLagrimas, vida, tiempoImunidad, WIDTH / 2, HEIGHT / 2);
         
         generarFondo("resources/instrucciones.png");
         generarPuertas();

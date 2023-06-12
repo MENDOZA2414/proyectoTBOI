@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,10 +27,17 @@ public class Ventana extends JFrame{
 	private int largo = 1080;
 	private int ancho = 690;
 	private int contador = 0;
-
 	
 	//Ruta de recursos 
 	private String ruta = "resources/"; 
+
+	//Animacion isaac
+	private String[] quieto = {"resources/isaac.png","resources/isaac.png","resources/isaac.png"};
+	private String[] animacion = quieto;
+	private String[] arriba = {"resources/isaacArr1.png","resources/isaacArr2.png","resources/isaacArr3.png"};
+	private String[] abajo = {"resources/isaacAbj1.png","resources/isaacAbj2.png","resources/isaacAbj3.png"};
+	private String[] izquierda = {"resources/isaacIzq1.png","resources/isaacIzq2.png","resources/isaacIzq3.png"};
+	private String[] derecha = {"resources/isaacDer1.png","resources/isaacDer2.png","resources/isaacDer3.png"};
 
 	private IngresarNombre ingresarNombre = new IngresarNombre(ruta); // <---------------------------------------
 	private PanelLeaderBoard panelLeaderBoard;
@@ -42,7 +51,7 @@ public class Ventana extends JFrame{
 	public String rutaTxt = ruta+"scores.txt"; // <---------------------------------------
     public Score score;// <---------------------------------------
     public ListaScores listaScores;//<--------
-    
+
 	public Ventana() {
 		//Propiedades de la ventana
 		super("The binding of Isaac");
@@ -80,6 +89,23 @@ public class Ventana extends JFrame{
                 }
             }
         }, 0, 100);
+        
+    	Timer movimiento = new Timer();
+	    movimiento.scheduleAtFixedRate(new TimerTask() {
+	        int i = 0;
+	        
+	        @Override
+	        public void run() {
+	        	if(juego.getIsaac().getVelocityX() == 0 && juego.getIsaac().getVelocityY() == 0) {
+		        	animacion = quieto;
+	        	}
+	            juego.getIsaac().setSprite(animacion[i]);
+	            i++;
+	            if (i >= animacion.length) {
+	                i = 0;
+	            }
+	        }
+	    }, 0, juego.getIsaac().getSpeed()*25);
 	}
 	//------ mensaje de dialogo customizable----
     public void mensaje(String texto){
@@ -262,21 +288,25 @@ public class Ventana extends JFrame{
 			}
 
 			public void keyPressed(KeyEvent e) {
+				
 			    int keyCode = e.getKeyCode();	
 			    
 		    	switch (keyCode) {
 		    	case KeyEvent.VK_A:
-		    		
 		    		juego.getIsaac().setVelocityX(-juego.getIsaac().getSpeed());
+		    		animacion = izquierda;
 		    		break;
 		    	case KeyEvent.VK_D:
 		    		juego.getIsaac().setVelocityX(juego.getIsaac().getSpeed());
+		    		animacion = derecha;
 		    		break;
 		    	case KeyEvent.VK_W:
 		    		juego.getIsaac().setVelocityY(-juego.getIsaac().getSpeed());
+		    		animacion = arriba;
 		    		break;
 		    	case KeyEvent.VK_S:
 		    		juego.getIsaac().setVelocityY(juego.getIsaac().getSpeed());
+		    		animacion = abajo;
 		    		break;
 		    	case KeyEvent.VK_UP:
 		    		juego.getIsaac().shootUp();
@@ -312,9 +342,8 @@ public class Ventana extends JFrame{
 					juego.getIsaac().setVelocityX(0);
 		        } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
 		        	juego.getIsaac().setVelocityY(0);
-		        }	
+		        }
 			}
-			
 		});
 		
 		juego.setFocusable(true);
