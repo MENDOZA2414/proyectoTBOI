@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,7 +21,7 @@ public class Juego extends JPanel {
     private float rangoLagrimas = 0.3f; //Rango de las lagrimas
     private int frecuenciaLagrimas = 450; //Que tan frecuente dispara iaaac, (1000 = 1 segundo)
     private int vida = 6; //Vida del isaac
-    
+
     //Variables Horf
 	private int tiempoImunidadH = 0;
     private int velocidadH = 6;
@@ -31,9 +30,10 @@ public class Juego extends JPanel {
     private int tamañoLagrimasH = 30;
     private int velocidaLagrimasH = 5;
     private float rangoLagrimasH = 0.6f;
-    private int frecuenciaLagrimasH = 450;
+    private int frecuenciaLagrimasH = 1500;
     private int vidaH = 4;
-    
+    private float probabilidadItemH = 0.15f; //Probabilidad de dropeo de item
+
     //Variables mosca
 	private int tiempoImunidadM = 0;
     private int velocidadM = 6;
@@ -44,7 +44,8 @@ public class Juego extends JPanel {
     private float rangoLagrimasM = 0;
     private int frecuenciaLagrimasM = 0;
     private int vidaM = 1;
-    
+    private float probabilidadItemM = 0f; //Probabilidad de dropeo de item
+
     //Variables skinny
 	private int tiempoImunidadS = 0;
     private int velocidadS = 3;
@@ -55,7 +56,8 @@ public class Juego extends JPanel {
     private float rangoLagrimasS = 0;
     private int frecuenciaLagrimasS = 0;
     private int vidaS = 6;
-    
+    private float probabilidadItemS = 0.25f; //Probabilidad de dropeo de item
+
     //---------------------------------------------------------------------------------------------
     
     public static final int WIDTH = 1080;
@@ -75,8 +77,9 @@ public class Juego extends JPanel {
     private List<Enemigo> enemigos = new ArrayList<>();
     private List<Puerta> puertas = new ArrayList<>();
     private List<Objeto> corazones = new ArrayList<>();
-
-  //Animacion isaac
+    private List<Item> items = new ArrayList<>();
+ 
+    //Animacion isaac
   	private String[] quieto = {"resources/skinny.png","resources/skinny.png","resources/skinny.png"};
   	private String[] animacion = quieto;
   	private String[] arriba = {"resources/skinnyArr1.png","resources/skinnyArr2.png","resources/skinnyArr3.png"};
@@ -99,6 +102,7 @@ public class Juego extends JPanel {
             
             colisionesObjetos();
             colisionesEnemigos();
+            colisionItems();
             
           //Movimiento enemigos
             for (Enemigo enemigo : enemigos) {
@@ -155,6 +159,26 @@ public class Juego extends JPanel {
         movimientoEnemigo.start();
     }
     
+    //POWER UPS MODIFICABLES
+    public void colisionItems() {
+    	for (int i = 0; i < items.size(); i++) {
+    		Item item = items.get(i);
+    		if(colision.detectar(isaac, item)) {
+    			if(item.getNombre().equals("Cebolla")) {
+    				isaac.setShootDelay(isaac.getShootDelay()-5);
+    				items.remove(i);
+    			}
+    			if(item.getNombre().equals("Jeringa")) {
+    				isaac.setTearRange(isaac.getTearRange()+0.5f);
+    				items.remove(i);
+    			}
+    			if(item.getNombre().equals("CorazonHorf")) {
+    				isaac.setLife(isaac.getLife()+1);
+    				items.remove(i);
+    			}
+    		}
+    	}
+    }
     public void colisionesObjetos() {
     	//Colision isaac con objetoss
     	for (int i = 0; i < objetos.size(); i++) {
@@ -243,6 +267,9 @@ public class Juego extends JPanel {
     	//Remover enemigos con vida igual a cero
     	for (int i = 0; i < enemigos.size(); i++) {
     	    if (enemigos.get(i).getLife() <= 0) {
+    	    	if(enemigos.get(i).generarItem()) {
+    	    		items.add(enemigos.get(i).getItem());    	    		
+    	    	}
     	        enemigos.remove(i);
     	        i--;
     	    }
@@ -309,7 +336,9 @@ public class Juego extends JPanel {
         for (Enemigo enemigo : enemigos) {
             enemigo.paint(g);
         }
-        
+        for (Item item : items) {
+            g.drawImage(item.getSprite(), item.getX(), item.getY(), item.getAncho(), item.getAlto(), null);
+        }
         //VIDAS
         for (int i = 0; i < isaac.getLife(); i++) {
         	Objeto corazon = corazones.get(i);
@@ -376,7 +405,11 @@ public class Juego extends JPanel {
 //            objetos.add(new Objeto("resources/rocaPicos.png", 70, x, y));
 //        }
     }
-
+    
+    private void eliminarItems() {
+    	items.clear();
+    }
+    
     private boolean verificarColisionConAdyacentes(int x, int y, List<Objeto> objetos) {
         int distanciaMinima = 100; // Distancia mínima entre objetos adyacentes
 
@@ -461,8 +494,8 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-
-            enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, rangoLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, x, y));
+            Item HorfItem = new Item("resources/CorazonHorf.png", "CorazonHorf", 35, 33, 0, 0);
+            enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, rangoLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, HorfItem, probabilidadItemH, x, y));
         }
         //Generacion de moscas
         int numeroMosca = random.nextInt(4) + 1;
@@ -475,7 +508,7 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/mosca.png", "resources/redtear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, tamañoLagrimasM, velocidaLagrimasM, rangoLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, x, y));
+            enemigos.add(new Enemigo("resources/mosca.png", "resources/redtear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, tamañoLagrimasM, velocidaLagrimasM, rangoLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, null, probabilidadItemM, x, y));
         }
       //Generacion de Skinny
         int numeroSkinny = random.nextInt(2); // Genera 0 o 1
@@ -489,7 +522,8 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/skinny.png", "resources/redtear.png", "Skinny", 63, 80, velocidadS, puedeMoverseS, disparaS, tamañoLagrimasS, velocidaLagrimasS, rangoLagrimasS, frecuenciaLagrimasS, vidaS, tiempoImunidadS, x, y));
+            Item SkinnyItem = new Item("resources/CebollaTriste.png", "Cebolla", 29, 51, 0, 0);
+            enemigos.add(new Enemigo("resources/skinny.png", "resources/redtear.png", "Skinny", 63, 80, velocidadS, puedeMoverseS, disparaS, tamañoLagrimasS, velocidaLagrimasS, rangoLagrimasS, frecuenciaLagrimasS, vidaS, tiempoImunidadS, SkinnyItem, probabilidadItemS, x, y));
         }
     }
     
@@ -572,6 +606,7 @@ public class Juego extends JPanel {
 		isaac.setLife(6);
 		eliminarObjetos();
 	    eliminarEnemigos();
+	    eliminarItems();
 		generarFondo("resources/instrucciones.png"); 
         nuevoJuego = true;
 	}

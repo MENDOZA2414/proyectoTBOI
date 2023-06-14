@@ -7,12 +7,17 @@ import java.util.Random;
 public class Enemigo extends Entidad {
     private List<Lagrima> lagrimas;
     public long lastShootTime;  // Tiempo del último disparo
-
-    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, int x, int y) {
+    
+    private Item item;
+    private float dropProbability;
+    
+    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, Item item, float dropProbability, int x, int y) {
         super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, tearSize, tearSpeed, tearRange, shootDelay, life, immunityTime, x, y);
         
         lagrimas = new ArrayList<>();
         lastShootTime = 0;
+        this.item = item;
+        this.dropProbability = dropProbability;
     }
 
 	public void mover() {
@@ -24,7 +29,7 @@ public class Enemigo extends Entidad {
 			int nuevaX = getX() + getSpeed() * cambioX;
 			int nuevaY = getY() + getSpeed() * cambioY;
 			
-			if(!(nuevaX < 80 || nuevaX > Juego.WIDTH - 110|| nuevaY < 80 || nuevaY > Juego.HEIGHT - 110)) {
+			if(!(nuevaX < 90 || nuevaX > Juego.WIDTH - 120|| nuevaY < 80 || nuevaY > Juego.HEIGHT - 120)) {
 				setX(nuevaX);
 				setY(nuevaY);
 			}		
@@ -90,14 +95,26 @@ public class Enemigo extends Entidad {
 	    }
 	}
 
-
-	 public void paint(Graphics g) {
+	public boolean generarItem() {
+		float randomNum = new Random().nextFloat();
+        if (randomNum <= getDropProbability() && item != null) {
+        	item.setX(getX()+getAncho()/2);
+        	item.setY(getY()+getAlto()/2);
+        	return true;
+        }
+        else {
+        	return false;
+        }
+	}
+	
+	public void paint(Graphics g) {
         g.drawImage(getSprite(), getX(), getY(), getAncho(), getAlto(), null);
 
         for (Lagrima lagrima : lagrimas) {
             g.drawImage(getTearSprite(), lagrima.getX(), lagrima.getY(), lagrima.getTamaño(), lagrima.getTamaño(), null);
             lagrima.update();
         }
+        
         long currentTime = System.currentTimeMillis();
         
         Iterator<Lagrima> iterator = lagrimas.iterator();
@@ -122,7 +139,7 @@ public class Enemigo extends Entidad {
         }
     }
 	
-	 public void disparar(int playerX, int playerY) {
+	public void disparar(int playerX, int playerY) {
 	    long currentTime = System.currentTimeMillis();
 	    if (isCanShoot() && currentTime - lastShootTime >= getShootDelay()) {
 	        int deltaX = playerX - getX()-getTearSize()/2;
@@ -139,5 +156,21 @@ public class Enemigo extends Entidad {
 
 	public List<Lagrima> getLagrimas() {
 		return lagrimas;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public float getDropProbability() {
+		return dropProbability;
+	}
+
+	public void setDropProbability(float dropProbability) {
+		this.dropProbability = dropProbability;
 	}
 }

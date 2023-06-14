@@ -167,7 +167,7 @@ public class Entidad {
 		return tearRange;
 	}
 
-	public void setTearRange(int tearRange) {
+	public void setTearRange(float tearRange) {
 		this.tearRange = tearRange;
 	}
 
