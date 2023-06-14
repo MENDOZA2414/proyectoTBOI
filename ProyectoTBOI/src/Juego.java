@@ -83,7 +83,7 @@ public class Juego extends JPanel {
     private List<Item> items = new ArrayList<>();
     private List<Item> monedas = new ArrayList<>();
 
-    private float probabilidadTienda = 0.5f;
+    private float probabilidadTienda = 1f;
     
     //Animacion isaac
   	private String[] quieto = {"resources/skinny.png","resources/skinny.png","resources/skinny.png"};
@@ -107,7 +107,7 @@ public class Juego extends JPanel {
         Timer timer = new Timer(1000 / FPS, e -> {
             update();
             repaint();  
-            
+            System.out.println(isaac.getX()+","+isaac.getY());
             colisionesObjetos();
             colisionesEnemigos();
             colisionItems();
@@ -341,11 +341,9 @@ public class Juego extends JPanel {
         for (Enemigo enemigo : enemigos) {
             enemigo.paint(g);
         }
-//        for (int i = 0; i < isaac.getLife(); i++) {
-//        	Item item = items.get(i);
-//        	int x = 10 + (i * (20 + 5));
-//            g.drawImage(item.getSprite(), item.getX(), item.getY(), item.getAncho(), item.getAlto(), null);
-//        }
+        for (Item item : items) {
+            g.drawImage(item.getSprite(), item.getX(), item.getY(), item.getAncho(), item.getAlto(), null);
+        }
         for (Item moneda : monedas) {
             g.drawImage(moneda.getSprite(), moneda.getX(), moneda.getY(), moneda.getAncho(), moneda.getAlto(), null);
         }
@@ -433,9 +431,9 @@ public class Juego extends JPanel {
     }
     
     private void generarItemsTienda() {
-        Item item1 = new Item("resources/CorazonHorf.png", "CorazonHorf", 35, 33, 0, 0);
-        Item item2 = new Item("resources/Cinturon.png", "Cinturon", 35, 33, 0, 0);
-        Item item3 = new Item("resources/CebollaTriste.png", "Cebolla", 29, 51, 0, 0);
+        Item item1 = new Item("resources/CorazonHorf.png", "CorazonHorf", 15, 35, 33, 0, 0);
+        Item item2 = new Item("resources/Cinturon.png",       "Cinturon", 15, 35, 33, 0, 0);
+        Item item3 = new Item("resources/CebollaTriste.png",   "Cebolla", 15, 29, 51, 0, 0);
         
         List<Item> listaItems = new ArrayList<>();
         listaItems.add(item1);
@@ -444,10 +442,15 @@ public class Juego extends JPanel {
         
         // Agregar dos elementos aleatorios de la lista a items
         Random random = new Random();
-        while (items.size() < 2) {
+        int espacioItems = 0;
+        while (items.size() < 2 && listaItems.size() > 0) {
             int randomIndex = random.nextInt(listaItems.size());
             Item randomItem = listaItems.get(randomIndex);
+            randomItem.setX(WIDTH/2+espacioItems);
+            randomItem.setY(HEIGHT/2);
             items.add(randomItem);
+            espacioItems+=100;
+            listaItems.remove(randomIndex);
         }
     }
 
@@ -543,7 +546,6 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            Item moneda = new Item("resources/moneda.png", "Moneda", 35, 38, 0, 0);
             enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, rangoLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, probabilidadMonedaH, x, y));
         }
         //Generacion de moscas
@@ -673,16 +675,15 @@ public class Juego extends JPanel {
 	    eliminarMonedas();
 		generarFondo("resources/instrucciones.png"); 
         nuevoJuego = true;
-        score=0;
 	}
 	
 	public Jugador getIsaac() {
 		return isaac;
 	}
+
     public int getScore() { 
 		return score;
 	}
-	
 
 	public int getAnteriorIsaacX() {
 		return anteriorIsaacX;
