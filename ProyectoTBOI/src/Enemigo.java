@@ -11,8 +11,8 @@ public class Enemigo extends Entidad {
     private Item moneda;
     private float dropProbability;
     
-    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, float dropProbability, int x, int y) {
-        super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, tearSize, tearSpeed, tearRange, shootDelay, life, immunityTime, x, y);
+    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int daamage, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, float dropProbability, int x, int y) {
+        super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, daamage, tearSize, tearSpeed, tearRange, shootDelay, life, immunityTime, x, y);
         lagrimas = new ArrayList<>();
         lastShootTime = 0;
         this.moneda = new Item("resources/moneda.png", "Moneda", 36, 38, getX(), getY());;

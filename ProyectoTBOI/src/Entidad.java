@@ -18,6 +18,7 @@ public class Entidad {
 	private boolean canShoot;	
     private int speed;
     private boolean canMove;
+    private int damage;
     private int tearSize;
     private int tearSpeed;
     private float tearRange;
@@ -30,7 +31,7 @@ public class Entidad {
     private int x;
     private int y;
     
-    public Entidad(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, int x, int y) {
+    public Entidad(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int damage, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, int x, int y) {
     	
         try {
             this.sprite = ImageIO.read(new File(spritePath));
@@ -46,6 +47,7 @@ public class Entidad {
     	this.canShoot = canShoot;
     	this.speed = speed;
     	this.canMove = canMove;
+    	this.damage = damage;
     	this.tearSize = tearSize;
     	this.tearSpeed = tearSpeed;
     	this.tearRange = tearRange;
@@ -58,8 +60,8 @@ public class Entidad {
         this.y = y;
     }
 
-    public void recibeDaño() {
-    	setLife(getLife()-1);
+    public void recibeDaño(int daño) {
+    	setLife(getLife()-daño);
     }
     
     public void activarInmunidad(int segundos) {
@@ -145,6 +147,14 @@ public class Entidad {
 
 	public void setCanMove(boolean canMove) {
 		this.canMove = canMove;
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public void setDamage(int daamage) {
+		this.damage = daamage;
 	}
 
 	public int getTearSize() {

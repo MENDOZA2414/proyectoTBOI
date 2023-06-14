@@ -19,6 +19,7 @@ public class Juego extends JPanel {
     private int velocidad = 6; //Velocidad del isaac
     private boolean puedeMoverse = true; //Determina si isaac puede o no moverse
     private boolean dispara = true; //Determina si isaac puede o no disparar
+    private int daño = 1; //Daño del isaac
     private int tamañoLagrimas = 30; //Tamaño de las lagrimas
     private int velocidaLagrimas = 5; //Velocidad a la que salen las lagrimas
     private float rangoLagrimas = 0.3f; //Rango de las lagrimas
@@ -30,36 +31,41 @@ public class Juego extends JPanel {
     private int velocidadH = 6;
     private boolean puedeMoverseH = false;
     private boolean disparaH = true;
+    private int dañoH = 1;
     private int tamañoLagrimasH = 30;
     private int velocidaLagrimasH = 5;
     private float rangoLagrimasH = 0.6f;
     private int frecuenciaLagrimasH = 1500;
     private int vidaH = 4;
-    private float probabilidadMonedaH = 1f; //Probabilidad de dropeo de item
+    private float probabilidadMonedaH = 0.6f; //Probabilidad de dropeo de item
 
     //Variables mosca
 	private int tiempoImunidadM = 0;
     private int velocidadM = 6;
     private boolean puedeMoverseM = true; 
     private boolean disparaM = false;
+    private int dañoM = 1;
     private int tamañoLagrimasM = 0;
     private int velocidaLagrimasM = 0;
     private float rangoLagrimasM = 0;
     private int frecuenciaLagrimasM = 0;
     private int vidaM = 1;
-    private float probabilidadMonedaM = 1f; //Probabilidad de dropeo de item
+    private float probabilidadMonedaM = 0.15f; //Probabilidad de dropeo de item
 
     //Variables skinny
 	private int tiempoImunidadS = 0;
     private int velocidadS = 3;
     private boolean puedeMoverseS = true; 
     private boolean disparaS = false;
+    private int dañoS = 1;
     private int tamañoLagrimasS = 0;
     private int velocidaLagrimasS = 0;
     private float rangoLagrimasS = 0;
     private int frecuenciaLagrimasS = 0;
     private int vidaS = 6;
-    private float probabilidadMonedaS = 1f; //Probabilidad de dropeo de item
+    private float probabilidadMonedaS = 0.40f; //Probabilidad de dropeo de item
+
+    private float probabilidadTienda = 0.1f;
 
     //---------------------------------------------------------------------------------------------
     
@@ -74,6 +80,8 @@ public class Juego extends JPanel {
     private int anteriorIsaacX;
     private int anteriorIsaacY;
     private boolean nuevoJuego = false;
+    private int cintosRecogidos = 0;
+    private int coronasRecogidas = 0;
     
     private BufferedImage fondo;
     private List<Objeto> objetos = new ArrayList<>();
@@ -83,8 +91,6 @@ public class Juego extends JPanel {
     private List<Item> items = new ArrayList<>();
     private List<Item> monedas = new ArrayList<>();
 
-    private float probabilidadTienda = 1f;
-    
     //Animacion isaac
   	private String[] quieto = {"resources/skinny.png","resources/skinny.png","resources/skinny.png"};
   	private String[] animacion = quieto;
@@ -98,7 +104,7 @@ public class Juego extends JPanel {
     Font font ;
     public Juego() {
         font = new Font("Pixel", Font.PLAIN, 24);
-        isaac = new Jugador("resources/isaac.png", "resources/normaltear.png", "isaac", 63, 80, velocidad, puedeMoverse, dispara, tamañoLagrimas, velocidaLagrimas, rangoLagrimas, frecuenciaLagrimas, vida, tiempoImunidad, WIDTH / 2, HEIGHT / 2);
+        isaac = new Jugador("resources/isaac.png", "resources/normaltear.png", "isaac", 63, 80, velocidad, puedeMoverse, dispara, daño, tamañoLagrimas, velocidaLagrimas, rangoLagrimas, frecuenciaLagrimas, vida, tiempoImunidad, WIDTH / 2, HEIGHT / 2);
         for(int i = 0; i< isaac.getLife(); i++) {
             corazones.add(new Objeto("resources/corazon.png", "Corazon", 30, 30, true, 0, 0, 0));
         }
@@ -187,7 +193,7 @@ public class Juego extends JPanel {
         			if(!isaac.isInvencible()){
 	        			if (colision.detectar(isaac, enemigo.getLagrimas().get(j))) {
 	        				enemigo.getLagrimas().remove(j);
-	        				isaac.recibeDaño();
+	        				isaac.recibeDaño(enemigo.getDamage());
 	                		isaac.activarInmunidad(tiempoImunidad);
 	        				j--;
 	        				break;
@@ -206,6 +212,7 @@ public class Juego extends JPanel {
                     	objeto.setDureza(objeto.getDureza()-1);
                     	if(objeto.getDureza() == 0) {
                     		objetos.remove(i);
+                    		score+=1;
                     	}
                     }
                	}
@@ -233,7 +240,7 @@ public class Juego extends JPanel {
 
         	    //Colision isaac con enemigos
             	if(colision.detectar(isaac, enemigos.get(i))) {
-            		isaac.recibeDaño();
+            		isaac.recibeDaño(isaac.getDamage());
             		isaac.activarInmunidad(tiempoImunidad);
             	}
         	}
@@ -243,9 +250,10 @@ public class Juego extends JPanel {
     	    Lagrima lagrima = isaac.getLagrimas().get(j);
     	    for (int i = 0; i < enemigos.size(); i++) {
     	        if (colision.detectar(lagrima, enemigos.get(i))) {
-    	            enemigos.get(i).recibeDaño();
+    	            enemigos.get(i).recibeDaño(isaac.getDamage());
             		enemigos.get(i).activarInmunidad(enemigos.get(i).getImmunityTime());
     	            isaac.getLagrimas().remove(j);
+                    score+=1;
         	        j--;
     	            break;
     	        }
@@ -259,7 +267,7 @@ public class Juego extends JPanel {
         	    	monedas.add(enemigos.get(i).getMoneda()); 	  
     	    	}
     	    	enemigos.remove(i);
-                score++;
+                score+=10;
     	    }
     	}
     }
@@ -270,12 +278,39 @@ public class Juego extends JPanel {
 	        if(colision.detectar(isaac, moneda)) {
 	        	isaac.setMonedasRecolectadas(isaac.getMonedasRecolectadas()+1);
 	            monedas.remove(i);
+                score+=2;
 	        }
 	    }
+		//POWER UPS
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             if(colision.detectar(isaac, item)) {
-                items.remove(i);
+            	if(isaac.getMonedasRecolectadas() >= item.getPrecio()) {
+    	        	isaac.setMonedasRecolectadas(isaac.getMonedasRecolectadas()-item.getPrecio());
+    	        	
+    	        	if(item.getNombre().equals("Cebolla")) {
+	                    isaac.setShootDelay(isaac.getShootDelay()-15);
+	                }
+	                if(item.getNombre().equals("Jeringa")) {
+	                    isaac.setTearRange(isaac.getTearRange()+0.5f);
+	                }
+	                if(item.getNombre().equals("Corazon")) {
+	                    isaac.setLife(6);
+	                }
+	                if(item.getNombre().equals("Cinturon")) {
+	                    isaac.setSpeed(isaac.getSpeed()+1);
+	                    cintosRecogidos++;
+	                }
+	                if(item.getNombre().equals("Corona")) {
+	                    isaac.setTearSize(isaac.getTearSize()+5);
+	                    isaac.setDamage(isaac.getDamage()+1);
+	                    coronasRecogidas++;
+	                   	for (int j = 0; j < enemigos.size(); j++) {
+	                    	enemigos.get(j).setLife(enemigos.get(i).getLife()+2);
+	                   	}
+	                }
+	                items.remove(i);
+            	}
             }
         }
     }
@@ -429,22 +464,31 @@ public class Juego extends JPanel {
     }
     
     private void generarItemsTienda() {
-        Item item1 = new Item("resources/CorazonHorf.png", "CorazonHorf", 15, 35, 33, 0, 0);
-        Item item2 = new Item("resources/Cinturon.png",       "Cinturon", 15, 35, 33, 0, 0);
+    	List<Item> listaItems = new ArrayList<>();
+
+    	Item item1 = new Item("resources/CorazonHorf.png",     "Corazon", 15, 35, 33, 0, 0);
+        if(cintosRecogidos < 5) {
+        	Item item2 = new Item("resources/Cinturon.png",       "Cinturon", 15, 35, 33, 0, 0);
+            listaItems.add(item2);
+        }
         Item item3 = new Item("resources/CebollaTriste.png",   "Cebolla", 15, 29, 51, 0, 0);
-        
-        List<Item> listaItems = new ArrayList<>();
+        Item item4 = new Item("resources/Jeringa.png",  	   "Jeringa", 15, 24, 42, 0, 0);
+        if(coronasRecogidas < 5) {
+        	Item item5 = new Item("resources/Corona.png",  	        "Corona", 15, 56, 35, 0, 0);
+            listaItems.add(item5);
+        }
+
         listaItems.add(item1);
-        listaItems.add(item2);
         listaItems.add(item3);
-        
+        listaItems.add(item4);
+
         // Agregar dos elementos aleatorios de la lista a items
         Random random = new Random();
         int espacioItems = 0;
         while (items.size() < 2 && listaItems.size() > 0) {
             int randomIndex = random.nextInt(listaItems.size());
             Item randomItem = listaItems.get(randomIndex);
-            randomItem.setX(386+espacioItems);
+            randomItem.setX(380+espacioItems);
             randomItem.setY(316);
             items.add(randomItem);
             espacioItems+=277;
@@ -544,7 +588,7 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, rangoLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, probabilidadMonedaH, x, y));
+            enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, dañoH, tamañoLagrimasH, velocidaLagrimasH, rangoLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, probabilidadMonedaH, x, y));
         }
         //Generacion de moscas
         int numeroMosca = random.nextInt(4) + 1;
@@ -557,7 +601,7 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/mosca.png", "resources/redtear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, tamañoLagrimasM, velocidaLagrimasM, rangoLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, probabilidadMonedaM, x, y));
+            enemigos.add(new Enemigo("resources/mosca.png", "resources/redtear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, dañoM, tamañoLagrimasM, velocidaLagrimasM, rangoLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, probabilidadMonedaM, x, y));
         }
       //Generacion de Skinny
         int numeroSkinny = random.nextInt(2); // Genera 0 o 1
@@ -571,7 +615,7 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/skinny.png", "resources/redtear.png", "Skinny", 63, 80, velocidadS, puedeMoverseS, disparaS, tamañoLagrimasS, velocidaLagrimasS, rangoLagrimasS, frecuenciaLagrimasS, vidaS, tiempoImunidadS, probabilidadMonedaS, x, y));
+            enemigos.add(new Enemigo("resources/skinny.png", "resources/redtear.png", "Skinny", 63, 80, velocidadS, puedeMoverseS, disparaS, dañoS, tamañoLagrimasS, velocidaLagrimasS, rangoLagrimasS, frecuenciaLagrimasS, vidaS, tiempoImunidadS, probabilidadMonedaS, x, y));
         }
     }
     

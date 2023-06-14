@@ -12,8 +12,8 @@ public class Jugador extends Entidad{
     public long lastShootTime;  // Tiempo del último disparo
     private int monedasRecolectadas;
     
-    public Jugador(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, int x, int y) {
-        super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, tearSize, tearSpeed, tearRange, shootDelay, life, immunityTime, x, y);
+    public Jugador(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int daamage, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, int x, int y) {
+        super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, daamage, tearSize, tearSpeed, tearRange, shootDelay, life, immunityTime, x, y);
         this.velocityX = 0;
         this.velocityY = 0;
         lagrimas = new ArrayList<>();
