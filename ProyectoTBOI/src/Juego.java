@@ -107,7 +107,6 @@ public class Juego extends JPanel {
         Timer timer = new Timer(1000 / FPS, e -> {
             update();
             repaint();  
-            System.out.println(isaac.getX()+","+isaac.getY());
             colisionesObjetos();
             colisionesEnemigos();
             colisionItems();
@@ -287,7 +286,6 @@ public class Juego extends JPanel {
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
         //Fondo agregado
-
         g.drawImage(fondo, 0, 0, WIDTH, HEIGHT, null);
 
         for (Objeto objeto : objetos) {
@@ -446,10 +444,10 @@ public class Juego extends JPanel {
         while (items.size() < 2 && listaItems.size() > 0) {
             int randomIndex = random.nextInt(listaItems.size());
             Item randomItem = listaItems.get(randomIndex);
-            randomItem.setX(WIDTH/2+espacioItems);
-            randomItem.setY(HEIGHT/2);
+            randomItem.setX(386+espacioItems);
+            randomItem.setY(316);
             items.add(randomItem);
-            espacioItems+=100;
+            espacioItems+=277;
             listaItems.remove(randomIndex);
         }
     }
@@ -590,7 +588,7 @@ public class Juego extends JPanel {
             eliminarEnemigos();
             eliminarMonedas();
             eliminarItems();
-            generarFondo("resources/instrucciones.png");
+            generarFondo("resources/tienda.png");
             generarItemsTienda();
         }
         //Generar salá normal
