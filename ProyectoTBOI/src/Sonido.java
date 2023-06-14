@@ -14,6 +14,11 @@ public class Sonido {
     public Sonido(String ruta) {
         iniciarMusica(ruta);
     }
+    
+    public Sonido(String ruta, float volumen) {
+    	this.volume = volumen;
+        iniciarSonido(ruta);
+    }
 
     private void iniciarMusica(String ruta) {
         try {
@@ -34,7 +39,26 @@ public class Sonido {
             l.printStackTrace();
         }
     }
+    
+    private void iniciarSonido(String ruta) {
+        try {
+            // Crear objeto Clip para reproducir el audio
+            clip = AudioSystem.getClip();
 
+            clip.open(AudioSystem.getAudioInputStream(new File("music/" + ruta + ".wav").getAbsoluteFile()));
+
+            // ajustar volumen audio
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            gainControl.setValue(dB);
+            
+            // Reproducir el audio
+            clip.start();
+           
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException l) {
+            l.printStackTrace();
+        }
+    }
     public void cambiarRuta(String nuevaRuta) {
         clip.stop(); // Detener la reproducción actual
 
