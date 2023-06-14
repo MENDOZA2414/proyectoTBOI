@@ -7,7 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class IngresarNombre extends JPanel {
-	JButton btnSiguiente;
+	private JButton btnSiguiente;
+	private JTextField campoNombre;
 	
 	public IngresarNombre(String ruta) {
 		setLayout(null);
@@ -18,7 +19,7 @@ public class IngresarNombre extends JPanel {
 		fondo.setSize(1080, 690);
 		fondo.setLocation(0,0);
 		
-		JTextField campoNombre= new JTextField();
+		 campoNombre= new JTextField();
 		campoNombre.setSize(400,50);
 		campoNombre.setLocation(330, 310);
 		campoNombre.setFont(new Font("Courier New", Font.PLAIN, 25));
@@ -47,5 +48,11 @@ public class IngresarNombre extends JPanel {
 	
 	public JButton getBotonSiguiente() {
 		return btnSiguiente;
+	}
+	public String getStrCampoNombre() {
+		return campoNombre.getText().trim();
+	}
+	public JTextField getCampoNombre() {
+		return campoNombre;
 	}
 }

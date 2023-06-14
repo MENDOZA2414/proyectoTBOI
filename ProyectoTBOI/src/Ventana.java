@@ -37,7 +37,7 @@ public class Ventana extends JFrame{
 	private String[] izquierda = {"resources/isaacIzq1.png","resources/isaacIzq2.png","resources/isaacIzq3.png"};
 	private String[] derecha = {"resources/isaacDer1.png","resources/isaacDer2.png","resources/isaacDer3.png"};
 
-	private IngresarNombre ingresarNombre = new IngresarNombre(ruta); // <---------------------------------------
+	private IngresarNombre ingresarNombre = new IngresarNombre(ruta); 
 	private PanelLeaderBoard panelLeaderBoard;
 
 	private Inicio inicio = new Inicio(ruta);
@@ -46,9 +46,10 @@ public class Ventana extends JFrame{
 	private GameOver gameover = new GameOver(ruta);
 	private Sonido sonido = new Sonido("IntroSong");
 
-	public String rutaTxt = ruta+"scores.txt"; // <---------------------------------------
-    public Score score;// <---------------------------------------
-    public ListaScores listaScores;//<--------
+	public String rutaTxt = ruta+"scores.txt";
+    public Score score;
+    public ListaScores listaScores;
+	private int scoreJuego;
 
 	public Ventana() {
 		//Propiedades de la ventana
@@ -56,9 +57,9 @@ public class Ventana extends JFrame{
 		setSize(largo, ancho);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		score= new Score() ;// <---------------------------------------
-	    listaScores= new ListaScores();// <---------------------------------------
-	    cargarTxtScores();// <---------------------------------------
+		score= new Score() ;
+	    listaScores= new ListaScores();
+	    cargarTxtScores();
 	    panelLeaderBoard= new PanelLeaderBoard(ruta,listaScores.obtenerLista()); 
 	    
 		keysInicio();
@@ -67,7 +68,8 @@ public class Ventana extends JFrame{
 	    setLocationRelativeTo(null);
 	    setVisible(true);
 	    setResizable(false);
-	    
+	    accionBtnNombre();
+
 	    Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -82,7 +84,7 @@ public class Ventana extends JFrame{
                 	}else {
                 		keysGameOver();
                 	}
-                	
+                	scoreJuego=juego.getScore();
                 	juego.nuevoJuego();
                     actualizar();
                     //timer.cancel();
@@ -106,6 +108,49 @@ public class Ventana extends JFrame{
 	            }
 	        }
 	    }, 0, juego.getIsaac().getSpeed()*25);
+	}
+	public void accionBtnNombre() { 
+		ingresarNombre.getBotonSiguiente().addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				if((listaScores.buscaNombre(ingresarNombre.getStrCampoNombre())==-1)&&!ingresarNombre.getStrCampoNombre().isEmpty()) {
+					crearNuevoScore(ingresarNombre.getStrCampoNombre(),scoreJuego);
+					ingresarNombre.getCampoNombre().setText("");
+					
+					remove(ingresarNombre);  
+					panelLeaderBoard= new PanelLeaderBoard(ruta,listaScores.obtenerLista()); 
+					add(panelLeaderBoard); 
+					panelLeaderBoard.requestFocusInWindow();
+					panelLeaderBoard.getBtnMenu().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							remove(panelLeaderBoard);
+							add(menu);
+							//menu.requestFocusInWindow(); // Establece el foco en el panel de menú  							
+							//menu.setMenu1();
+							
+							
+							contador=0;
+							sonido.cambiarRuta("IntroSong");
+							menu.requestFocusInWindow(); // Establece el foco en el panel de menú 
+							actualizar();
+						}
+						
+					});
+					
+					actualizar();
+		    		
+		    	}else {
+		    		
+		    		mensaje("Nombre existente o invalido");
+		    	}
+			}
+			
+		});
 	}
 	//------ mensaje de dialogo customizable----
     public void mensaje(String texto){
@@ -366,13 +411,13 @@ public class Ventana extends JFrame{
 				if (keyCode == KeyEvent.VK_SPACE) {
 					System.out.println("space");
                     remove(gameover);  
-                    add(menu);
-                    contador=0;
-                    sonido.cambiarRuta("IntroSong");
-                    menu.requestFocusInWindow(); // Establece el foco en el panel de menú  
+                    add(ingresarNombre); 
+                    //contador=0;
+                    //sonido.cambiarRuta("IntroSong");
+                    //menu.requestFocusInWindow(); // Establece el foco en el panel de menú  
                     
                     actualizar();
-                }
+				}
 			}
 
 			@Override

@@ -14,6 +14,7 @@ import java.util.Random;
 public class Juego extends JPanel {
 
 	//Variables generales juego (DATO: no son para power ups, son de default)
+    private int score=0;
 	private int tiempoImunidad = 2; //Tiempo que pasa antes de recibir otro fregazo
     private int velocidad = 6; //Velocidad del isaac
     private boolean puedeMoverse = true; //Determina si isaac puede o no moverse
@@ -93,8 +94,10 @@ public class Juego extends JPanel {
   	private String[] derecha = {"resources/skinnyDer1.png","resources/skinnyDer2.png","resources/skinnyDer3.png"};
 
     private Colision colision = new Colision();
-    
+
+    Font font ;
     public Juego() {
+        font = new Font("Pixel", Font.PLAIN, 24);
         isaac = new Jugador("resources/isaac.png", "resources/normaltear.png", "isaac", 63, 80, velocidad, puedeMoverse, dispara, tamañoLagrimas, velocidaLagrimas, rangoLagrimas, frecuenciaLagrimas, vida, tiempoImunidad, WIDTH / 2, HEIGHT / 2);
         for(int i = 0; i< isaac.getLife(); i++) {
             corazones.add(new Objeto("resources/corazon.png", "Corazon", 30, 30, true, 0, 0, 0));
@@ -257,6 +260,7 @@ public class Juego extends JPanel {
         	    	monedas.add(enemigos.get(i).getMoneda()); 	  
     	    	}
     	    	enemigos.remove(i);
+                score++;
     	    }
     	}
     }
@@ -356,15 +360,17 @@ public class Juego extends JPanel {
         //(PROVOCA QUE TARDE EN CARGAR OJO, PANTALLAZO BLANCO)
         // Agregar número de monedas
         Item moneda = new Item("resources/moneda.png", "Moneda", 33, 33, 0, 0);
-        Font font = new Font("Pixel", Font.PLAIN, 24);
+       
         g.setFont(font);
         g.setColor(Color.WHITE);
-        int monedas = isaac.getMonedasRecolectadas(); // Obtener la cantidad de monedas del jugador
-        String textoMonedas = "x"+monedas;
-        int xTexto = 10 + moneda.getAncho() + 5; // Posición x del texto al lado de la moneda
-        int yTexto = 48 + moneda.getAlto() / 2; // Posición y del texto centrado verticalmente
-        g.drawString(textoMonedas, xTexto, yTexto);
+        //int monedas = isaac.getMonedasRecolectadas(); // Obtener la cantidad de monedas del jugador
+        String textoMonedas = "x"+isaac.getMonedasRecolectadas();
+        //int xTexto = 10 + moneda.getAncho() + 5; // Posición x del texto al lado de la moneda
+        //int yTexto = 48 + moneda.getAlto() / 2; // Posición y del texto centrado verticalmente
+        g.drawString(textoMonedas, 48, 65);
         g.drawImage(moneda.getSprite(), 10, 38, moneda.getAncho(), moneda.getAlto(), null);
+
+        g.drawString("Score: "+score, 850, 40);
     }
     
     //Variables globales para controlar la cantidad de piedras y cacas
@@ -667,11 +673,16 @@ public class Juego extends JPanel {
 	    eliminarMonedas();
 		generarFondo("resources/instrucciones.png"); 
         nuevoJuego = true;
+        score=0;
 	}
 	
 	public Jugador getIsaac() {
 		return isaac;
 	}
+    public int getScore() { 
+		return score;
+	}
+	
 
 	public int getAnteriorIsaacX() {
 		return anteriorIsaacX;

@@ -1,4 +1,4 @@
-delia|1000
-Pepech|900
-Tilinesio|800
-Ana|100
+delia|10
+Pepech|90
+Tilinesio|80
+Ana|10

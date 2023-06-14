@@ -10,6 +10,7 @@ public class ListaScores {
 
     public void agregarScore(Score Score){
         this.lista.add(Score);
+        ordenarScores();
     }
     /*
     public void modificarScore(int posicion, Score Score){
