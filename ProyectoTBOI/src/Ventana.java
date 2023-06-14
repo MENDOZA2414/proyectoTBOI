@@ -75,6 +75,8 @@ public class Ventana extends JFrame{
                 if(juego.getIsaac().getLife() == 0) {
                 	remove(juego);         
                 	add(gameover);
+                	sonido.cambiarRuta("gameOver");
+                	
                 	if(juego.isNuevoJuego()) {
                 		gameover.requestFocusInWindow();
                 	}else {
@@ -172,6 +174,11 @@ public class Ventana extends JFrame{
                     keysMenu();
                     actualizar();
                 }
+				if (keyCode == KeyEvent.VK_ESCAPE) {
+	    		System.out.println("Exit...");
+	    		System.exit(0);
+	    		
+				}
 			}
 
 			@Override
@@ -319,7 +326,7 @@ public class Ventana extends JFrame{
 		    		juego.getIsaac().shootRight();
 		    		break;
 		    	case KeyEvent.VK_M:
-		    		if (sonido.getClip().isRunning()) {   //Musica que puso Chris
+		    		if (sonido.getClip().isRunning()) {   //Musica de intro
 		    			System.out.println("Muted...");
 		    			sonido.getClip().stop();
 		    		} else {
