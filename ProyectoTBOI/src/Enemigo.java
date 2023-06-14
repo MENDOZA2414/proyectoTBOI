@@ -8,15 +8,14 @@ public class Enemigo extends Entidad {
     private List<Lagrima> lagrimas;
     public long lastShootTime;  // Tiempo del último disparo
     
-    private Item item;
+    private Item moneda;
     private float dropProbability;
     
-    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, Item item, float dropProbability, int x, int y) {
+    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, float dropProbability, int x, int y) {
         super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, tearSize, tearSpeed, tearRange, shootDelay, life, immunityTime, x, y);
-        
         lagrimas = new ArrayList<>();
         lastShootTime = 0;
-        this.item = item;
+        this.moneda = new Item("resources/moneda.png", "Moneda", 36, 38, getX(), getY());;
         this.dropProbability = dropProbability;
     }
 
@@ -95,11 +94,11 @@ public class Enemigo extends Entidad {
 	    }
 	}
 
-	public boolean generarItem() {
+	public boolean generarMoneda() {
 		float randomNum = new Random().nextFloat();
-        if (randomNum <= getDropProbability() && item != null) {
-        	item.setX(getX()+getAncho()/2);
-        	item.setY(getY()+getAlto()/2);
+        if (randomNum <= getDropProbability() && moneda != null) {
+        	moneda.setX(getX()+getAncho()/2);
+        	moneda.setY(getY()+getAlto()/2);
         	return true;
         }
         else {
@@ -158,12 +157,12 @@ public class Enemigo extends Entidad {
 		return lagrimas;
 	}
 
-	public Item getItem() {
-		return item;
+	public Item getMoneda() {
+		return moneda;
 	}
 
-	public void setItem(Item item) {
-		this.item = item;
+	public void setMoneda(Item moneda) {
+		this.moneda = moneda;
 	}
 
 	public float getDropProbability() {

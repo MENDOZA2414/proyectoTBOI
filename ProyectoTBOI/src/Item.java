@@ -6,10 +6,25 @@ import javax.imageio.ImageIO;
 public class Item {
 	private BufferedImage sprite;
 	private String nombre;
+	private int precio;
 	private int ancho;
 	private int alto;
 	private int x;
     private int y;
+
+    public Item(String spritePath, String nombre, int precio, int ancho, int alto, int x, int y) {    	
+        try {
+            this.sprite = ImageIO.read(new File(spritePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.nombre = nombre;
+        this.precio = precio;
+    	this.ancho = ancho;
+    	this.alto = alto;
+        this.x = x;
+        this.y = x;
+    }
 
     public Item(String spritePath, String nombre, int ancho, int alto, int x, int y) {    	
         try {
@@ -23,7 +38,7 @@ public class Item {
         this.x = x;
         this.y = x;
     }
-
+    
 	public BufferedImage getSprite() {
 		return sprite;
 	}
@@ -43,6 +58,14 @@ public class Item {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public int getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(int precio) {
+		this.precio = precio;
 	}
 
 	public int getAncho() {
