@@ -20,6 +20,7 @@ public class Entidad {
     private boolean canMove;
     private int tearSize;
     private int tearSpeed;
+    private float tearRange;
     private int shootDelay;
     private int life;
     private boolean invencible;
@@ -29,7 +30,7 @@ public class Entidad {
     private int x;
     private int y;
     
-    public Entidad(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, int shootDelay, int life, int immunityTime, int x, int y) {
+    public Entidad(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, int x, int y) {
     	
         try {
             this.sprite = ImageIO.read(new File(spritePath));
@@ -47,6 +48,7 @@ public class Entidad {
     	this.canMove = canMove;
     	this.tearSize = tearSize;
     	this.tearSpeed = tearSpeed;
+    	this.tearRange = tearRange;
     	this.shootDelay = shootDelay;
     	this.life = life;
     	this.invencible = false;
@@ -88,8 +90,13 @@ public class Entidad {
 		return tearSprite;
 	}
 
-	public void setTearSprite(BufferedImage tearSprite) {
-		this.tearSprite = tearSprite;
+	public void setTearSprite(String spritePath) {
+		try {
+			this.tearSprite = ImageIO.read(new File(spritePath));
+	            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 
 	public String getNombre() {
@@ -154,6 +161,14 @@ public class Entidad {
 
 	public void setTearSpeed(int tearSpeed) {
 		this.tearSpeed = tearSpeed;
+	}
+	
+	public float getTearRange() {
+		return tearRange;
+	}
+
+	public void setTearRange(int tearRange) {
+		this.tearRange = tearRange;
 	}
 
 	public int getShootDelay() {

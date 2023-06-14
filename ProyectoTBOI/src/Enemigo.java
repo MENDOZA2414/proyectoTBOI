@@ -1,5 +1,6 @@
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -7,8 +8,8 @@ public class Enemigo extends Entidad {
     private List<Lagrima> lagrimas;
     public long lastShootTime;  // Tiempo del último disparo
 
-    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, int shootDelay, int life, int immunityTime, int x, int y) {
-        super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, tearSize, tearSpeed, shootDelay, life, immunityTime, x, y);
+    public Enemigo(String spritePath, String tearPath, String nombre, int ancho, int alto, int speed, boolean canMove, boolean canShoot, int tearSize, int tearSpeed, float tearRange, int shootDelay, int life, int immunityTime, int x, int y) {
+        super(spritePath, tearPath, nombre, ancho, alto, speed, canMove, canShoot, tearSize, tearSpeed, tearRange, shootDelay, life, immunityTime, x, y);
         
         lagrimas = new ArrayList<>();
         lastShootTime = 0;
@@ -97,7 +98,28 @@ public class Enemigo extends Entidad {
             g.drawImage(getTearSprite(), lagrima.getX(), lagrima.getY(), lagrima.getTamaño(), lagrima.getTamaño(), null);
             lagrima.update();
         }
-        lagrimas.removeIf(lagrima -> lagrima.getX() < 80 || lagrima.getX() > Juego.WIDTH - 110|| lagrima.getY() < 80 || lagrima.getY() > Juego.HEIGHT - 110);
+        long currentTime = System.currentTimeMillis();
+        
+        Iterator<Lagrima> iterator = lagrimas.iterator();
+        while (iterator.hasNext()) {
+            Lagrima lagrima = iterator.next();
+            lagrima.update(); // Actualizar estado de la lágrima
+            
+            if (currentTime - lagrima.getStartTime() >= lagrima.getLifetime()) {
+                lagrima.setVelocityY(lagrima.getVelocityY() + 1); // Aumentar la velocidad de caída en cada actualización
+                lagrima.update(); // Actualizar la posición de la lágrima según la nueva velocidad
+                
+                iterator.remove();
+            }
+        }
+        
+        lagrimas.removeIf(lagrima -> lagrima.getX() < 80 || lagrima.getX() > Juego.WIDTH - 110 ||
+                lagrima.getY() < 80 || lagrima.getY() > Juego.HEIGHT - 110);
+        
+        // Verificar si se puede disparar nuevamente
+        if (currentTime - lastShootTime >= getShootDelay()) {
+            setCanShoot(true);
+        }
     }
 	
 	 public void disparar(int playerX, int playerY) {
@@ -109,7 +131,7 @@ public class Enemigo extends Entidad {
 	        int speedX = (int) (getTearSpeed() * Math.cos(angle));
 	        int speedY = (int) (getTearSpeed() * Math.sin(angle));
 	        
-	        Lagrima lagrima = new Lagrima(getTearSize(), getX()+getTearSize()/2, getY()+ getTearSize() / 2, speedX, speedY);
+	        Lagrima lagrima = new Lagrima(getTearSize(), getX()+getTearSize()/2, getY()+ getTearSize() / 2, speedX, speedY, getTearRange());
 	        lagrimas.add(lagrima);
 	        lastShootTime = currentTime;
 	    }

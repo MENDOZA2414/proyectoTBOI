@@ -1,13 +1,10 @@
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Puerta extends Objeto {
     private boolean abierta;
     private String rutaOriginal;
 
-    public Puerta(String spritePath, int ancho, int alto, int x, int y, boolean abierta) {
-        super(spritePath, ancho, alto, x, y);
+    public Puerta(String spritePath, String nombre, int ancho, int alto, boolean destruible, int dureza, int x, int y, boolean abierta) {
+        super(spritePath, nombre, ancho, alto, destruible, dureza, x, y);
         rutaOriginal=spritePath;
         this.abierta = abierta;
     }
@@ -21,45 +18,24 @@ public class Puerta extends Objeto {
     }
 
     public void setSpriteCerrado(){
-        try {
-            this.setSprite(ImageIO.read(new File(rutaOriginal)));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }  
+        this.setSprite(rutaOriginal);
     }
     public void setSpriteAbierto(int puerta) {
         switch(puerta){
             case 0:
-            try {
-                this.setSprite(ImageIO.read(new File("resources/puertaArriba.png")));  
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            	this.setSprite("resources/puertaArriba.png");
             break;
 
         case 1:    
-        try {
-            this.setSprite(ImageIO.read(new File("resources/puertaAbajo.png")));  ;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            	this.setSprite("resources/puertaAbajo.png");
             break;
 
         case 2:
-        try {
-            this.setSprite(ImageIO.read(new File("resources/puertaIzquierda.png")));  ;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        		this.setSprite("resources/puertaIzquierda.png");
             break;
 
         case 3:
-        try {
-            this.setSprite(ImageIO.read(new File("resources/puertaDerecha.png")));  ;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            	this.setSprite("resources/puertaDerecha.png");
             break;
         }  
 	}

@@ -19,6 +19,7 @@ public class Juego extends JPanel {
     private boolean dispara = true; //Determina si isaac puede o no disparar
     private int tamañoLagrimas = 30; //Tamaño de las lagrimas
     private int velocidaLagrimas = 5; //Velocidad a la que salen las lagrimas
+    private float rangoLagrimas = 0.3f; //Rango de las lagrimas
     private int frecuenciaLagrimas = 450; //Que tan frecuente dispara iaaac, (1000 = 1 segundo)
     private int vida = 6; //Vida del isaac
     
@@ -29,6 +30,7 @@ public class Juego extends JPanel {
     private boolean disparaH = true;
     private int tamañoLagrimasH = 30;
     private int velocidaLagrimasH = 5;
+    private float rangoLagrimasH = 0.6f;
     private int frecuenciaLagrimasH = 450;
     private int vidaH = 4;
     
@@ -39,16 +41,18 @@ public class Juego extends JPanel {
     private boolean disparaM = false;
     private int tamañoLagrimasM = 0;
     private int velocidaLagrimasM = 0;
+    private float rangoLagrimasM = 0;
     private int frecuenciaLagrimasM = 0;
     private int vidaM = 1;
     
-    //Variables mosca
+    //Variables skinny
 	private int tiempoImunidadS = 0;
     private int velocidadS = 3;
     private boolean puedeMoverseS = true; 
     private boolean disparaS = false;
     private int tamañoLagrimasS = 0;
     private int velocidaLagrimasS = 0;
+    private float rangoLagrimasS = 0;
     private int frecuenciaLagrimasS = 0;
     private int vidaS = 6;
     
@@ -70,7 +74,8 @@ public class Juego extends JPanel {
     private List<Objeto> objetos = new ArrayList<>();
     private List<Enemigo> enemigos = new ArrayList<>();
     private List<Puerta> puertas = new ArrayList<>();
-    
+    private List<Objeto> corazones = new ArrayList<>();
+
   //Animacion isaac
   	private String[] quieto = {"resources/skinny.png","resources/skinny.png","resources/skinny.png"};
   	private String[] animacion = quieto;
@@ -79,12 +84,13 @@ public class Juego extends JPanel {
   	private String[] izquierda = {"resources/skinnyIzq1.png","resources/skinnyIzq2.png","resources/skinnyIzq3.png"};
   	private String[] derecha = {"resources/skinnyDer1.png","resources/skinnyDer2.png","resources/skinnyDer3.png"};
 
-    private Objeto corazon = new Objeto("resources/corazon.png", 30, 30, 0, 0);
     private Colision colision = new Colision();
     
     public Juego() {
-        isaac = new Jugador("resources/isaac.png", "resources/normaltear.png", "isaac", 63, 80, velocidad, puedeMoverse, dispara, tamañoLagrimas, velocidaLagrimas, frecuenciaLagrimas, vida, tiempoImunidad, WIDTH / 2, HEIGHT / 2);
-        
+        isaac = new Jugador("resources/isaac.png", "resources/normaltear.png", "isaac", 63, 80, velocidad, puedeMoverse, dispara, tamañoLagrimas, velocidaLagrimas, rangoLagrimas, frecuenciaLagrimas, vida, tiempoImunidad, WIDTH / 2, HEIGHT / 2);
+        for(int i = 0; i< isaac.getLife(); i++) {
+            corazones.add(new Objeto("resources/corazon.png", "Corazon", 30, 30, true, 0, 0, 0));
+        }
         generarFondo("resources/instrucciones.png");
         generarPuertas();
         Timer timer = new Timer(1000 / FPS, e -> {
@@ -151,7 +157,9 @@ public class Juego extends JPanel {
     
     public void colisionesObjetos() {
     	//Colision isaac con objetoss
-    	for (Objeto objeto : objetos) {
+    	for (int i = 0; i < objetos.size(); i++) {
+    		Objeto objeto = objetos.get(i);
+    		
     		if(colision.detectar(isaac, objeto)) {
     			isaac.setX(isaac.getX()-isaac.getVelocityX());
         		isaac.setY(isaac.getY()-isaac.getVelocityY());
@@ -177,11 +185,18 @@ public class Juego extends JPanel {
         		}
     	    }
             //Colicion lagrimas con objetos
-           	for (int i = 0; i < isaac.getLagrimas().size(); i++) {
-            	Lagrima lagrima = isaac.getLagrimas().get(i);
+           	for (int k = 0; k < isaac.getLagrimas().size(); k++) {
+            	Lagrima lagrima = isaac.getLagrimas().get(k);
             	
                	if(colision.detectar(lagrima, objeto)) {
-                    isaac.getLagrimas().remove(i);
+                    isaac.getLagrimas().remove(k);
+                    
+                    if(objeto.isDestruible()) {
+                    	objeto.setDureza(objeto.getDureza()-1);
+                    	if(objeto.getDureza() == 0) {
+                    		objetos.remove(i);
+                    	}
+                    }
                	}
            	}
     	}
@@ -296,9 +311,9 @@ public class Juego extends JPanel {
         }
         
         //VIDAS
-        g.setColor(Color.RED);
         for (int i = 0; i < isaac.getLife(); i++) {
-            int x = 10 + (i * (20 + 5));
+        	Objeto corazon = corazones.get(i);
+        	int x = 10 + (i * (20 + 5));
             g.drawImage(corazon.getSprite(), x, 10, corazon.getAncho(), corazon.getAlto(), null);
         }
     }
@@ -330,7 +345,7 @@ public class Juego extends JPanel {
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
 
-            objetos.add(new Objeto("resources/roca.png", 70, 70, x, y));
+            objetos.add(new Objeto("resources/roca.png", "Roca", 70, 70, false, 0, x, y));
         }
 
         // Generar cacas
@@ -344,7 +359,7 @@ public class Juego extends JPanel {
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
 
-            objetos.add(new Objeto("resources/popo.png", 70, 70, x, y));
+            objetos.add(new Objeto("resources/popo.png", "Popo", 70, 70, true, 3, x, y));
         }
         
         // Generar rocas con picos
@@ -402,25 +417,25 @@ public class Juego extends JPanel {
         // Puerta arriba
         int puertaArribaX = (WIDTH - puertaAncho) / 2;
         int puertaArribaY = 40;
-        Puerta puertaArriba = new Puerta("resources/puertaCerradaArriba.png", puertaAncho, puertaAncho, puertaArribaX, puertaArribaY, false);
+        Puerta puertaArriba = new Puerta("resources/puertaCerradaArriba.png", "Arriba", puertaAncho, puertaAncho, false, 0, puertaArribaX, puertaArribaY, false);
         puertas.add(puertaArriba);
    
         // Puerta abajo    
         int puertaAbajoX = (WIDTH - puertaAncho) / 2;
         int puertaAbajoY = HEIGHT - puertaAlto + 245;
-        Puerta puertaAbajo = new Puerta("resources/puertaCerradaAbajo.png", puertaAncho, puertaAncho, puertaAbajoX, puertaAbajoY, false);
+        Puerta puertaAbajo = new Puerta("resources/puertaCerradaAbajo.png", "Abajo", puertaAncho, puertaAncho, false, 0, puertaAbajoX, puertaAbajoY, false);
         puertas.add(puertaAbajo);   
 
         // Puerta izquierda
         int puertaIzquierdaX = 45;
         int puertaIzquierdaY = (HEIGHT - puertaAncho - 20) / 2;
-        Puerta puertaIzquierda = new Puerta("resources/puertaCerradaIzquierda.png", puertaAncho, puertaAncho, puertaIzquierdaX, puertaIzquierdaY, false);
+        Puerta puertaIzquierda = new Puerta("resources/puertaCerradaIzquierda.png", "Izquierda", puertaAncho, puertaAncho, false, 0, puertaIzquierdaX, puertaIzquierdaY, false);
         puertas.add(puertaIzquierda);
 
         // Puerta derecha
         int puertaDerechaX = WIDTH - puertaAncho - 25;
         int puertaDerechaY = (HEIGHT - puertaAncho - 20) / 2;
-        Puerta puertaDerecha = new Puerta("resources/puertaCerradaDerecha.png", puertaAncho, puertaAncho, puertaDerechaX, puertaDerechaY, false);
+        Puerta puertaDerecha = new Puerta("resources/puertaCerradaDerecha.png", "Derecha", puertaAncho, puertaAncho, false, 0, puertaDerechaX, puertaDerechaY, false);
         puertas.add(puertaDerecha);
     }
 
@@ -447,7 +462,7 @@ public class Juego extends JPanel {
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
 
-            enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, x, y));
+            enemigos.add(new Enemigo("resources/Horf.png", "resources/redtear.png", "Horf", 55, 55, velocidadH, puedeMoverseH, disparaH, tamañoLagrimasH, velocidaLagrimasH, rangoLagrimasH, frecuenciaLagrimasH, vidaH, tiempoImunidadH, x, y));
         }
         //Generacion de moscas
         int numeroMosca = random.nextInt(4) + 1;
@@ -460,7 +475,7 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/mosca.png", "resources/redtear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, tamañoLagrimasM, velocidaLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, x, y));
+            enemigos.add(new Enemigo("resources/mosca.png", "resources/redtear.png", "Mosca", 34, 26, velocidadM, puedeMoverseM, disparaM, tamañoLagrimasM, velocidaLagrimasM, rangoLagrimasM, frecuenciaLagrimasM, vidaM, tiempoImunidadM, x, y));
         }
       //Generacion de Skinny
         int numeroSkinny = random.nextInt(2); // Genera 0 o 1
@@ -474,7 +489,7 @@ public class Juego extends JPanel {
                 x = random.nextInt(limiteSuperiorX - limiteInferiorX + 1) + limiteInferiorX;
                 y = random.nextInt(limiteSuperiorY - limiteInferiorY + 1) + limiteInferiorY;
             }
-            enemigos.add(new Enemigo("resources/skinny.png", "resources/redtear.png", "Skinny", 63, 80, velocidadS, puedeMoverseS, disparaS, tamañoLagrimasS, velocidaLagrimasS, frecuenciaLagrimasS, vidaS, tiempoImunidadS, x, y));
+            enemigos.add(new Enemigo("resources/skinny.png", "resources/redtear.png", "Skinny", 63, 80, velocidadS, puedeMoverseS, disparaS, tamañoLagrimasS, velocidaLagrimasS, rangoLagrimasS, frecuenciaLagrimasS, vidaS, tiempoImunidadS, x, y));
         }
     }
     
