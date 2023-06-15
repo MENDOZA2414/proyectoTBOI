@@ -2,6 +2,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class Jugador extends Entidad{
 
@@ -18,7 +19,7 @@ public class Jugador extends Entidad{
         this.velocityY = 0;
         lagrimas = new ArrayList<>();
         lastShootTime = 0;
-        monedasRecolectadas = 0;
+        monedasRecolectadas = 1000;
     }
     
     public void paint(Graphics g) {
@@ -99,7 +100,7 @@ public class Jugador extends Entidad{
             lastShootTime = currentTime;
         }
     }
-
+    
     public int getVelocityX() {
         return velocityX;
     }

@@ -65,7 +65,7 @@ public class Juego extends JPanel {
     private int vidaS = 6;
     private float probabilidadMonedaS = 0.40f; //Probabilidad de dropeo de item
 
-    private float probabilidadTienda = 0.1f;
+    private float probabilidadTienda = 0.9f;
 
     //---------------------------------------------------------------------------------------------
     
@@ -77,6 +77,7 @@ public class Juego extends JPanel {
     private int numeroAleatorio = random.nextInt(4) + 1;
     
     private Jugador isaac;
+    private Sonido sonido;
     private int anteriorIsaacX;
     private int anteriorIsaacY;
     private boolean nuevoJuego = false;
@@ -112,7 +113,7 @@ public class Juego extends JPanel {
         generarPuertas();
         Timer timer = new Timer(1000 / FPS, e -> {
             update();
-            repaint();  
+            repaint();   
             colisionesObjetos();
             colisionesEnemigos();
             colisionItems();
@@ -170,7 +171,40 @@ public class Juego extends JPanel {
             }
         });
         movimientoEnemigo.start();
+        
+        
+        
     }
+    boolean reproduccionHorf = false;
+    boolean reproduccionMosca = false;
+    
+    public void sonidoEnemigos() {
+        Timer sonidoHorf = new Timer(500, e -> {
+            
+            
+            for (Enemigo enemigo : enemigos) {
+                if (enemigo.getNombre().equals("Horf")) {
+                    reproduccionHorf = true;
+                    new Sonido("horf", 0.2f);
+                    System.out.println("La imagen 'horf' existe en el arreglo.");
+
+                }
+                
+                if (enemigo.getNombre().equals("mosca")) {
+                    reproduccionMosca = true;
+                }
+            }
+            
+            if (reproduccionHorf) {
+                new Sonido("horf", 0.2f);
+            }
+            
+            if (reproduccionMosca) {
+                new Sonido("fly", 0.2f);
+            }
+        });
+    }
+
     
     public void colisionesObjetos() {
     	//Colision isaac con objetoss
@@ -193,6 +227,8 @@ public class Juego extends JPanel {
         			if(!isaac.isInvencible()){
 	        			if (colision.detectar(isaac, enemigo.getLagrimas().get(j))) {
 	        				enemigo.getLagrimas().remove(j);
+	        			    new Sonido("lagrima",0.2f);
+	        				sonidoDañoIsaac();
 	        				isaac.recibeDaño(enemigo.getDamage());
 	                		isaac.activarInmunidad(tiempoImunidad);
 	        				j--;
@@ -207,7 +243,7 @@ public class Juego extends JPanel {
             	
                	if(colision.detectar(lagrima, objeto)) {
                     isaac.getLagrimas().remove(k);
-                    
+                    new Sonido("lagrima",0.2f);
                     if(objeto.isDestruible()) {
                     	objeto.setDureza(objeto.getDureza()-1);
                     	if(objeto.getDureza() == 0) {
@@ -233,6 +269,24 @@ public class Juego extends JPanel {
         }
     }
     
+    public void sonidoDañoIsaac() {
+    	int numeroAleatorio = random.nextInt(3) + 1;
+		
+		switch(numeroAleatorio) {
+			case 1:
+				new Sonido("dañoIsaac1",0.2f);
+			break;
+			
+			case 2:
+				new Sonido("dañoIsaac2",0.2f);
+			break;
+			
+			case 3:
+				new Sonido("dañoIsaac3",0.2f);
+			break;
+		}
+    }
+    
     public void colisionesEnemigos() {
     	//Colisiones de enemigos
         for (int i = 0; i < enemigos.size(); i++) {
@@ -241,6 +295,7 @@ public class Juego extends JPanel {
         	    //Colision isaac con enemigos
             	if(colision.detectar(isaac, enemigos.get(i))) {
             		isaac.recibeDaño(isaac.getDamage());
+            		sonidoDañoIsaac();
             		isaac.activarInmunidad(tiempoImunidad);
             	}
         	}
@@ -251,6 +306,7 @@ public class Juego extends JPanel {
     	    for (int i = 0; i < enemigos.size(); i++) {
     	        if (colision.detectar(lagrima, enemigos.get(i))) {
     	            enemigos.get(i).recibeDaño(isaac.getDamage());
+    	            new Sonido("lagrima",0.2f);
             		enemigos.get(i).activarInmunidad(enemigos.get(i).getImmunityTime());
     	            isaac.getLagrimas().remove(j);
                     score+=1;
@@ -276,6 +332,7 @@ public class Juego extends JPanel {
 		for (int i = 0; i < monedas.size(); i++) {
 	        Item moneda = monedas.get(i);
 	        if(colision.detectar(isaac, moneda)) {
+	        	new Sonido("monedaSound",0.2f);
 	        	isaac.setMonedasRecolectadas(isaac.getMonedasRecolectadas()+1);
 	            monedas.remove(i);
                 score+=2;
@@ -287,6 +344,7 @@ public class Juego extends JPanel {
             if(colision.detectar(isaac, item)) {
             	if(isaac.getMonedasRecolectadas() >= item.getPrecio()) {
     	        	isaac.setMonedasRecolectadas(isaac.getMonedasRecolectadas()-item.getPrecio());
+    	        	new Sonido("powerUp",0.2f);
     	        	
     	        	if(item.getNombre().equals("Cebolla")) {
 	                    isaac.setShootDelay(isaac.getShootDelay()-15);

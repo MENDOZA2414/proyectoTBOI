@@ -75,6 +75,7 @@ public class Ventana extends JFrame{
             @Override
             public void run() {
                 if(juego.getIsaac().getLife() == 0) {
+                	new Sonido("muerteIsaac",0.2f);
                 	remove(juego);         
                 	add(gameover);
                 	sonido.cambiarRuta("gameOver");
