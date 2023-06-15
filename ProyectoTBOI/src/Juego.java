@@ -16,7 +16,7 @@ public class Juego extends JPanel {
 	//Variables generales juego (DATO: no son para power ups, son de default)
     private int score=0;
 	private int tiempoImunidad = 2; //Tiempo que pasa antes de recibir otro fregazo
-    private int velocidad = 6; //Velocidad del isaac
+    private int velocidad = 4; //Velocidad del isaac
     private boolean puedeMoverse = true; //Determina si isaac puede o no moverse
     private boolean dispara = true; //Determina si isaac puede o no disparar
     private int daño = 1; //Daño del isaac
@@ -65,9 +65,9 @@ public class Juego extends JPanel {
     private int vidaS = 6;
     private float probabilidadMonedaS = 0.40f; //Probabilidad de dropeo de item
 
-    private float probabilidadTienda = 0.1f;
+    private float probabilidadTienda = 0.2f;
     private float probabilidadItemVida = 0.25f;
-
+    Item moneda = new Item("resources/moneda.png", "Moneda", 33, 33, 0, 0);
     //---------------------------------------------------------------------------------------------
     
     public static final int WIDTH = 1080;
@@ -76,6 +76,7 @@ public class Juego extends JPanel {
 
     private Random random = new Random();
     private int numeroAleatorio = random.nextInt(4) + 1;
+    private int nAleatorioPuerta= random.nextInt(10) + 1;
     
     private Jugador isaac;
     private int anteriorIsaacX;
@@ -281,14 +282,16 @@ public class Juego extends JPanel {
     		// Agregar los items generados a la lista itemsGenerados
     		itemsGenerados.addAll(recogibles);
     	}
-        //Colicion isaac con puertas
+        //Colision isaac con puertas
     	for (int i = 0; i < puertas.size(); i++) {
      	
         	if(colision.detectar(isaac, puertas.get(numeroAleatorio-1)) && puertas.get(i).isAbierta()) {
         		puertas.get(i).setAbierta(false);
         		nuevaSala();
+        	    nAleatorioPuerta= random.nextInt(10) + 1; 
+        		
         	}
-        	if(enemigos.isEmpty()) {
+        	if(enemigos.isEmpty() || nAleatorioPuerta<4) {
         		puertas.get(i).setAbierta(true);
         	}else {
         		puertas.get(i).setAbierta(false);
@@ -436,7 +439,7 @@ public class Juego extends JPanel {
         
         switch (numeroAleatorio) {
         case 1:
-            if(enemigos.isEmpty()) {
+            if(enemigos.isEmpty()|| nAleatorioPuerta<4) {
                 puertas.get(0).setSpriteAbierto(0);
             }
             else{
@@ -446,7 +449,7 @@ public class Juego extends JPanel {
             break;
 
         case 2:    
-            if(enemigos.isEmpty()) {
+            if(enemigos.isEmpty()|| nAleatorioPuerta<4) {
                 puertas.get(1).setSpriteAbierto(1);
             }
             else{
@@ -456,7 +459,7 @@ public class Juego extends JPanel {
             break;
 
         case 3:
-            if(enemigos.isEmpty()) {
+            if(enemigos.isEmpty()|| nAleatorioPuerta<4) {
                 puertas.get(2).setSpriteAbierto(2);
             }
             else{
@@ -466,7 +469,7 @@ public class Juego extends JPanel {
             break;
 
         case 4:
-            if(enemigos.isEmpty()) {
+            if(enemigos.isEmpty()|| nAleatorioPuerta<4) {
                 puertas.get(3).setSpriteAbierto(3);
             }
             else{
@@ -500,7 +503,7 @@ public class Juego extends JPanel {
         
         //(PROVOCA QUE TARDE EN CARGAR OJO, PANTALLAZO BLANCO)
         // Agregar número de monedas
-        Item moneda = new Item("resources/moneda.png", "Moneda", 33, 33, 0, 0);
+        
        
         g.setFont(font);
         g.setColor(Color.WHITE);

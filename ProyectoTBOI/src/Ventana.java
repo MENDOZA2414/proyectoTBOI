@@ -221,7 +221,7 @@ public class Ventana extends JFrame{
                     actualizar();
                 }
 				if (keyCode == KeyEvent.VK_ESCAPE) {
-	    		System.out.println("Exit...");
+	    		//System.out.println("Exit...");
 	    		System.exit(0);
 	    		
 				}
@@ -253,7 +253,7 @@ public class Ventana extends JFrame{
 			
 				int keyCode = e.getKeyCode(); 
 				
-				System.out.println(keyCode);
+				//System.out.println(keyCode);
 				if(keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP){
 					
 					if(opcion>1){
@@ -373,15 +373,15 @@ public class Ventana extends JFrame{
 		    		break;
 		    	case KeyEvent.VK_M:
 		    		if (sonido.getClip().isRunning()) {   //Musica de intro
-		    			System.out.println("Muted...");
+		    			//System.out.println("Muted...");
 		    			sonido.getClip().stop();
 		    		} else {
-		    			System.out.println("Playing...");
+		    			//System.out.println("Playing...");
 		    			sonido.getClip().start();
 		    		}
 		    		break;
 		    	case KeyEvent.VK_ESCAPE:
-		    		System.out.println("Exit...");
+		    		//System.out.println("Exit...");
 		    		System.exit(0);
 		    		break;
 		    	}
@@ -402,7 +402,7 @@ public class Ventana extends JFrame{
 	}
 	
 	public void keysGameOver(){
-		System.out.println("keyGameover");
+		//System.out.println("keyGameover");
 		gameover.addKeyListener(new KeyListener() {
 
 			@Override
@@ -410,7 +410,7 @@ public class Ventana extends JFrame{
 				
 				char keyCode = e.getKeyChar();
 				if (keyCode == KeyEvent.VK_SPACE) {
-					System.out.println("space");
+					//System.out.println("space");
                     remove(gameover);  
                     add(ingresarNombre); 
                     //contador=0;
@@ -465,7 +465,7 @@ public class Ventana extends JFrame{
 					panelCarga.setVisible(false);
 					timer.cancel();	
 				}
-				System.out.println(contador);
+				//System.out.println(contador);
 			}
 		};
 		timer.schedule(tarea,0,1000);
