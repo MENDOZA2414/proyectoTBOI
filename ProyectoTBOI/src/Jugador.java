@@ -19,7 +19,7 @@ public class Jugador extends Entidad{
         this.velocityY = 0;
         lagrimas = new ArrayList<>();
         lastShootTime = 0;
-        monedasRecolectadas = 1000;
+        monedasRecolectadas = 0;
     }
     
     public void paint(Graphics g) {
@@ -71,6 +71,7 @@ public class Jugador extends Entidad{
             Lagrima lagrima = new Lagrima(getTearSize(), getX(), getY(), 0, -getTearSpeed(), getTearRange());
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
+            new Sonido("lagrima", 0.2f);
         }
     }
 
@@ -80,6 +81,7 @@ public class Jugador extends Entidad{
             Lagrima lagrima = new Lagrima(getTearSize(), getX(), getY(), 0, getTearSpeed(), getTearRange());
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
+            new Sonido("lagrima", 0.2f);
         }
     }
 
@@ -89,6 +91,7 @@ public class Jugador extends Entidad{
             Lagrima lagrima = new Lagrima(getTearSize(), getX(), getY(), -getTearSpeed(), 0, getTearRange());
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
+            new Sonido("lagrima", 0.2f);
         }
     }
 
@@ -98,6 +101,7 @@ public class Jugador extends Entidad{
             Lagrima lagrima = new Lagrima(getTearSize(), getX(), getY(), getTearSpeed(), 0, getTearRange());
             lagrimas.add(lagrima);
             lastShootTime = currentTime;
+            new Sonido("lagrima", 0.2f);
         }
     }
     
