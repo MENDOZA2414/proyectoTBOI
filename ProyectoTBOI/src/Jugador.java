@@ -2,7 +2,8 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 
 public class Jugador extends Entidad{
 
@@ -22,9 +23,21 @@ public class Jugador extends Entidad{
         monedasRecolectadas = 0;
     }
     
-    public void paint(Graphics g) {
-        g.drawImage(getSprite(), getX() - getAncho() / 2, getY() - getAlto() / 2, getAncho(), getAlto(), null);
+    public void paint(Graphics g, boolean invencible) {
+        if(!invencible) {
+        	g.drawImage(getSprite(), getX() - getAncho() / 2, getY() - getAlto() / 2, getAncho(), getAlto(), null);
+        }
+        else {
+        
+        	float brightness = 0.5f; // Valor de brillo deseado
 
+        	RescaleOp op = new RescaleOp(brightness, 0, null);
+
+        	BufferedImage modifiedImage = op.filter(getSprite(), null);
+        	g.drawImage(modifiedImage, getX() - getAncho() / 2, getY() - getAlto() / 2, getAncho(), getAlto(), null);
+
+        }
+        
         for (Lagrima lagrima : lagrimas) {
             g.drawImage(getTearSprite(), lagrima.getX() - lagrima.getTamaño() / 2, lagrima.getY() - lagrima.getTamaño() / 2, lagrima.getTamaño(), lagrima.getTamaño(), null);
         }

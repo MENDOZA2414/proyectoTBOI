@@ -1,6 +1,1 @@
-Mike|468
-Pepech|90
-Tilinesio|80
-delia|10
-Ana|10
-a|10
+Mike2|791

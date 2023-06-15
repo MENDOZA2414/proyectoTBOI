@@ -66,7 +66,7 @@ public class Juego extends JPanel {
     private float probabilidadMonedaS = 0.40f; //Probabilidad de dropeo de item
 
     private float probabilidadTienda = 0.1f;
-    private float probabilidadItemVida = 1f;
+    private float probabilidadItemVida = 0.25f;
 
     //---------------------------------------------------------------------------------------------
     
@@ -476,7 +476,7 @@ public class Juego extends JPanel {
             break;
         }
         
-        isaac.paint(g);
+        isaac.paint(g, isaac.isInvencible());
         
         for (Enemigo enemigo : enemigos) {
             enemigo.paint(g);
@@ -826,6 +826,8 @@ public class Juego extends JPanel {
 	    eliminarItems();
 	    eliminarMonedas();
 		generarFondo("resources/instrucciones.png"); 
+		score = 0;
+		isaac.setMonedasRecolectadas(0);
         nuevoJuego = true;
 	}
 	
