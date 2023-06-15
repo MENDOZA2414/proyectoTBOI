@@ -28,7 +28,7 @@ public class Juego extends JPanel {
 
     //Variables Horf
 	private int tiempoImunidadH = 0;
-    private int velocidadH = 6;
+    private int velocidadH = 1;
     private boolean puedeMoverseH = false;
     private boolean disparaH = true;
     private int dañoH = 1;
@@ -67,6 +67,9 @@ public class Juego extends JPanel {
 
     private float probabilidadTienda = 0.2f;
     private float probabilidadItemVida = 0.25f;
+    
+    private int sala = 0;
+    
     Item moneda = new Item("resources/moneda.png", "Moneda", 33, 33, 0, 0);
     //---------------------------------------------------------------------------------------------
     
@@ -416,7 +419,7 @@ public class Juego extends JPanel {
 	                    isaac.setDamage(isaac.getDamage()+1);
 	                    coronasRecogidas++;
 	                   	for (int j = 0; j < enemigos.size(); j++) {
-	                    	enemigos.get(j).setLife(enemigos.get(i).getLife()+2);
+	                    	enemigos.get(j).setLife(enemigos.get(i).getLife()+4);
 	                   	}
 	                }
 	                powerUps.remove(i);
@@ -757,6 +760,10 @@ public class Juego extends JPanel {
 	        generarFondo("resources/mapa.png");
 	        generarObjetos();
 	        generarEnemigos();
+	        sala++;
+	        if(sala >= 15) {
+	        	puedeMoverseH = true;
+	        }
         }
         do {
         	nuevoAleatorio = random.nextInt(4) + 1;
@@ -832,6 +839,59 @@ public class Juego extends JPanel {
 		score = 0;
 		isaac.setMonedasRecolectadas(0);
         nuevoJuego = true;
+        
+        score = 0;
+        tiempoImunidad = 2;
+        velocidad = 4;
+        puedeMoverse = true;
+        dispara = true;
+        daño = 1;
+        tamañoLagrimas = 30;
+        velocidaLagrimas = 5;
+        rangoLagrimas = 0.3f;
+        frecuenciaLagrimas = 450;
+        vida = 6;
+
+        tiempoImunidadH = 0;
+        velocidadH = 1;
+        puedeMoverseH = false;
+        disparaH = true;
+        dañoH = 1;
+        tamañoLagrimasH = 30;
+        velocidaLagrimasH = 5;
+        rangoLagrimasH = 0.6f;
+        frecuenciaLagrimasH = 1500;
+        vidaH = 4;
+        probabilidadMonedaH = 0.6f;
+
+        tiempoImunidadM = 0;
+        velocidadM = 6;
+        puedeMoverseM = true;
+        disparaM = false;
+        dañoM = 1;
+        tamañoLagrimasM = 0;
+        velocidaLagrimasM = 0;
+        rangoLagrimasM = 0;
+        frecuenciaLagrimasM = 0;
+        vidaM = 1;
+        probabilidadMonedaM = 0.15f;
+
+        tiempoImunidadS = 0;
+        velocidadS = 3;
+        puedeMoverseS = true;
+        disparaS = false;
+        dañoS = 1;
+        tamañoLagrimasS = 0;
+        velocidaLagrimasS = 0;
+        rangoLagrimasS = 0;
+        frecuenciaLagrimasS = 0;
+        vidaS = 6;
+        probabilidadMonedaS = 0.40f;
+
+        probabilidadTienda = 0.2f;
+        probabilidadItemVida = 0.25f;
+
+        sala = 0;
 	}
 	
 	public Jugador getIsaac() {
